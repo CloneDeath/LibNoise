@@ -1,89 +1,89 @@
 ﻿namespace LibNoise.Filter
 {
     /// <summary>
-    /// Noise module that outputs the input source value without modification.
-    /// Just a convenient class for any purpose.
+    ///     Noise module that outputs the input source value without modification.
+    ///     Just a convenient class for any purpose.
     /// </summary>
     public class Pipe : FilterModule, IModule4D, IModule3D, IModule2D, IModule1D
-    {
-        #region Ctor/Dtor
+	{
+		#region IModule1D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x)
+		{
+			x *= _frequency;
 
-        #region IModule1D Members
+			return _source1D.GetValue(x);
+		}
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x)
-        {
-            x *= _frequency;
+		#endregion
 
-            return _source1D.GetValue(x);
-        }
+		#region IModule2D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y)
+		{
+			x *= _frequency;
+			y *= _frequency;
 
-        #region IModule2D Members
+			return _source2D.GetValue(x, y);
+		}
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y)
-        {
-            x *= _frequency;
-            y *= _frequency;
+		#endregion
 
-            return _source2D.GetValue(x, y);
-        }
+		#region IModule3D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <param name="z">The input coordinate on the z-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y, float z)
+		{
+			x *= _frequency;
+			y *= _frequency;
+			z *= _frequency;
 
-        #region IModule3D Members
+			return _source3D.GetValue(x, y, z);
+		}
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <param name="z">The input coordinate on the z-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y, float z)
-        {
-            x *= _frequency;
-            y *= _frequency;
-            z *= _frequency;
+		#endregion
 
-            return _source3D.GetValue(x, y, z);
-        }
+		#region IModule4D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <param name="z">The input coordinate on the z-axis.</param>
+	    /// <param name="t">The input coordinate on the t-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y, float z, float t)
+		{
+			x *= _frequency;
+			y *= _frequency;
+			z *= _frequency;
+			t *= _frequency;
 
-        #region IModule4D Members
+			return _source4D.GetValue(x, y, z, t);
+		}
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <param name="z">The input coordinate on the z-axis.</param>
-        /// <param name="t">The input coordinate on the t-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y, float z, float t)
-        {
-            x *= _frequency;
-            y *= _frequency;
-            z *= _frequency;
-            t *= _frequency;
+		#endregion
 
-            return _source4D.GetValue(x, y, z, t);
-        }
+		#region Ctor/Dtor
 
-        #endregion
-    }
+		#endregion
+	}
 }

@@ -1,260 +1,230 @@
-﻿
+﻿using System;
+
 namespace LibNoise.Renderer
 {
-    using System;
-
     /// <summary>
-    /// Renders a normal map from a noise map.
-    ///
-    /// This class renders an image containing the normal vectors from a noise
-    /// map object.  This image can then be used as a bump map for a 3D
-    /// application or game.
-    ///
-    /// This class encodes the (x, y, z) components of the normal vector into
-    /// the (red, green, blue) channels of the image.  Like any 24-bit
-    /// true-color image, the channel values range from 0 to 255.  0
-    /// represents a normal coordinate of -1.0 and 255 represents a normal
-    /// coordinate of +1.0.
-    ///
-    /// You should also specify the <i>bump height</i> before rendering the
-    /// normal map.  The bump height specifies the ratio of spatial resolution
-    /// to elevation resolution.  For example, if your noise map has a spatial
-    /// resolution of 30 meters and an elevation resolution of one meter, set
-    /// the bump height to 1.0 / 30.0.
-    ///
-    /// <b>Rendering the normal map</b>
-    ///
-    /// To render the image containing the normal map, perform the following
-    /// steps:
-    /// - Pass a IMap2D<float> object to the NoiseMap property.
-    /// - Pass an IMap2D<Color> object to the Image property.
-    /// - Call the Render() method.
+    ///     Renders a normal map from a noise map.
+    ///     This class renders an image containing the normal vectors from a noise
+    ///     map object.  This image can then be used as a bump map for a 3D
+    ///     application or game.
+    ///     This class encodes the (x, y, z) components of the normal vector into
+    ///     the (red, green, blue) channels of the image.  Like any 24-bit
+    ///     true-color image, the channel values range from 0 to 255.  0
+    ///     represents a normal coordinate of -1.0 and 255 represents a normal
+    ///     coordinate of +1.0.
+    ///     You should also specify the <i>bump height</i> before rendering the
+    ///     normal map.  The bump height specifies the ratio of spatial resolution
+    ///     to elevation resolution.  For example, if your noise map has a spatial
+    ///     resolution of 30 meters and an elevation resolution of one meter, set
+    ///     the bump height to 1.0 / 30.0.
+    ///     <b>Rendering the normal map</b>
+    ///     To render the image containing the normal map, perform the following
+    ///     steps:
+    ///     - Pass a IMap2D
+    ///     <float>
+    ///         object to the NoiseMap property.
+    ///         - Pass an IMap2D
+    ///         <Color>
+    ///             object to the Image property.
+    ///             - Call the Render() method.
     /// </summary>
     public class NormalMapRenderer : AbstractImageRenderer
-    {
-        #region Fields
+	{
+		#region Ctor/Dtor
 
-        /// <summary>
-        /// This object requires three points (the initial point and the right
-        /// and up neighbors) to calculate the normal vector at that point.
-        /// If wrapping is/ enabled, and the initial point is on the edge of
-        /// the noise map, the appropriate neighbors that lie outside of the
-        /// noise map will "wrap" to the opposite side(s) of the noise map.
-        /// Otherwise, the appropriate neighbors are cropped to the edge of
-        /// the noise map.
-        ///
-        /// Enabling wrapping is useful when creating spherical and tileable
-        /// normal maps.
-        /// </summary>
-        protected bool _WrapEnabled;
+	    /// <summary>
+	    ///     Default constructor
+	    /// </summary>
+	    public NormalMapRenderer()
+		{
+			_WrapEnabled = false;
+			_bumpHeight = 1.0f;
+		}
 
-        /// <summary>
-        /// The bump height specifies the ratio of spatial resolution to
-        /// elevation resolution.  For example, if your noise map has a
-        /// spatial resolution of 30 meters and an elevation resolution of one
-        /// meter, set the bump height to 1.0 / 30.0.
-        ///
-        /// The spatial resolution and elevation resolution are determined by
-        /// the application.
-        /// </summary>
-        protected float _bumpHeight;
+		#endregion
 
-        #endregion
+		#region Interaction
 
-        #region Accessors
+	    /// <summary>
+	    ///     Renders the noise map to the destination image.
+	    /// </summary>
+	    public override void Render()
+		{
+			if (_noiseMap == null)
+				throw new ArgumentException("A noise map must be provided");
 
-        /// <summary>
-        /// Enables or disables noise-map wrapping.
-        ///
-        /// This object requires five points (the initial point and its four
-        /// neighbors) to calculate light shading.  If wrapping is enabled,
-        /// and the initial point is on the edge of the noise map, the
-        /// appropriate neighbors that lie outside of the noise map will
-        /// "wrap" to the opposite side(s) of the noise map.  Otherwise, the
-        /// appropriate neighbors are cropped to the edge of the noise map.
-        ///
-        /// Enabling wrapping is useful when creating spherical renderings and
-        /// tileable textures.
-        /// </summary>
-        public bool WrapEnabled
-        {
-            get { return _WrapEnabled; }
-            set { _WrapEnabled = value; }
-        }
+			if (_image == null)
+				throw new ArgumentException("An image map must be provided");
 
-        /// <summary>
-        /// Gets or Sets the bump height
-        /// </summary>
-        public float BumpHeight
-        {
-            get { return _bumpHeight; }
-            set { _bumpHeight = value; }
-        }
+			if (_noiseMap.Width <= 0 || _noiseMap.Height <= 0)
+				throw new ArgumentException("Incoherent noise map size (0,0)");
 
-        #endregion
+			var width = _noiseMap.Width;
+			var height = _noiseMap.Height;
+			var rightEdge = width - 1;
+			var topEdge = height - 1;
+			var leftEdgeOffset = -rightEdge;
+			var bottomEdgeOffset = -topEdge;
 
-        #region Ctor/Dtor
+			_image.SetSize(width, height);
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public NormalMapRenderer()
-        {
-            _WrapEnabled = false;
-            _bumpHeight = 1.0f;
-        }
+			for (var y = 0; y < height; y++)
+			{
+				for (var x = 0; x < width; x++)
+				{
+					// Calculate the positions of the current point's right and up
+					// neighbors.
+					int yUpOffset, xRightOffset;
 
-        #endregion
+					if (_WrapEnabled)
+					{
+						if (x == rightEdge)
+							xRightOffset = leftEdgeOffset; // left edge
+						else
+							xRightOffset = 1; // next
 
-        #region Interaction
+						if (y == topEdge)
+							yUpOffset = bottomEdgeOffset; //bottom edge
+						else
+							yUpOffset = 1; // above
+					}
+					else
+					{
+						if (x == rightEdge)
+							xRightOffset = 0; // same
+						else
+							xRightOffset = 1; // next
 
-        /// <summary>
-        /// Renders the noise map to the destination image.
-        /// </summary>
-        public override void Render()
-        {
-            if (_noiseMap == null)
-                throw new ArgumentException("A noise map must be provided");
+						if (y == topEdge)
+							yUpOffset = 0; // same
+						else
+							yUpOffset = 1; // above
+					}
 
-            if (_image == null)
-                throw new ArgumentException("An image map must be provided");
+					// Get the noise value of the current point in the source noise map
+					// and the noise values of its right and up neighbors.
+					var nc = _noiseMap.GetValue(x, y);
+					var nr = _noiseMap.GetValue(x + xRightOffset, y);
+					var nu = _noiseMap.GetValue(x, y + yUpOffset);
 
-            if (_noiseMap.Width <= 0 || _noiseMap.Height <= 0)
-                throw new ArgumentException("Incoherent noise map size (0,0)");
+					// Blend the source color, background color, and the light
+					// intensity together, then update the destination image with that
+					// color.
+					_image.SetValue(x, y, CalcNormalColor(nc, nr, nu, _bumpHeight));
+				}
 
-            int width = _noiseMap.Width;
-            int height = _noiseMap.Height;
-            int rightEdge = width - 1;
-            int topEdge = height - 1;
-            int leftEdgeOffset = -rightEdge;
-            int bottomEdgeOffset = -topEdge;
+				if (_callBack != null)
+					_callBack(y);
+			}
+		}
 
-            _image.SetSize(width, height);
+		#endregion
 
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    // Calculate the positions of the current point's right and up
-                    // neighbors.
-                    int yUpOffset, xRightOffset;
+		#region Internal
 
-                    if (_WrapEnabled)
-                    {
-                        if (x == rightEdge)
-                        {
-// right edge
-                            xRightOffset = leftEdgeOffset; // left edge
-                        }
-                        else
-                        {
-                            // anywhere
-                            xRightOffset = 1; // next
-                        }
+	    /// <summary>
+	    ///     Calculates the normal vector at a given point on the noise map.
+	    ///     This method encodes the (x, y, z) components of the normal vector
+	    ///     into the (red, green, blue) channels of the returned color.  In
+	    ///     order to represent the vector as a color, each coordinate of the
+	    ///     normal is mapped from the -1.0 to 1.0 range to the 0 to 255 range.
+	    ///     The bump height specifies the ratio of spatial resolution to
+	    ///     elevation resolution.  For example, if your noise map has a
+	    ///     spatial resolution of 30 meters and an elevation resolution of one
+	    ///     meter, set the bump height to 1.0 / 30.0.
+	    ///     The spatial resolution and elevation resolution are determined by
+	    ///     the application.
+	    /// </summary>
+	    /// <param name="nc">The height of the given point in the noise map</param>
+	    /// <param name="nr">The height of the left neighbor</param>
+	    /// <param name="nu">The height of the up neighbor</param>
+	    /// <param name="bumpHeight">The bump height</param>
+	    /// <returns>The normal vector represented as a color</returns>
+	    private IColor CalcNormalColor(float nc, float nr, float nu, float bumpHeight)
+		{
+			// Calculate the surface normal.
+			nc *= bumpHeight;
+			nr *= bumpHeight;
+			nu *= bumpHeight;
 
-                        if (y == topEdge)
-                        {
-                            // top edge
-                            yUpOffset = bottomEdgeOffset; //bottom edge
-                        }
-                        else
-                        {
-                            // anywhere
-                            yUpOffset = 1; // above
-                        }
-                    }
-                    else
-                    {
-                        if (x == rightEdge)
-                        {
-                            // right edge
-                            xRightOffset = 0; // same
-                        }
-                        else
-                        {
-                            // anywhere
-                            xRightOffset = 1; // next
-                        }
+			var ncr = nc - nr;
+			var ncu = nc - nu;
+			var d = (float) Math.Sqrt(ncu * ncu + ncr * ncr + 1);
+			var vxc = (nc - nr) / d;
+			var vyc = (nc - nu) / d;
+			var vzc = 1.0f / d;
 
-                        if (y == topEdge)
-                        {
-                            // top edge
-                            yUpOffset = 0; // same
-                        }
-                        else
-                            yUpOffset = 1; // above
-                    }
+			// Map the normal range from the (-1.0 .. +1.0) range to the (0 .. 255)
+			// range.
+			byte xc, yc, zc;
 
-                    // Get the noise value of the current point in the source noise map
-                    // and the noise values of its right and up neighbors.
-                    float nc = _noiseMap.GetValue(x, y);
-                    float nr = _noiseMap.GetValue(x + xRightOffset, y);
-                    float nu = _noiseMap.GetValue(x, y + yUpOffset);
+			xc = (byte) (Libnoise.FastFloor((vxc + 1.0f) * 127.5f) & 0xff);
+			yc = (byte) (Libnoise.FastFloor((vyc + 1.0f) * 127.5f) & 0xff);
+			zc = (byte) (Libnoise.FastFloor((vzc + 1.0f) * 127.5f) & 0xff);
 
-                    // Blend the source color, background color, and the light
-                    // intensity together, then update the destination image with that
-                    // color.
-                    _image.SetValue(x, y, CalcNormalColor(nc, nr, nu, _bumpHeight));
-                }
+			//
+			//zc = (byte)((int)((floor)((vzc + 1.0f) * 127.5f)) & 0xff); 
 
-                if (_callBack != null)
-                    _callBack(y);
-            }
-        }
+			return new Color(xc, yc, zc, 255);
+		}
 
-        #endregion
+		#endregion
 
-        #region Internal
+		#region Fields
 
-        /// <summary>
-        /// Calculates the normal vector at a given point on the noise map.
-        /// 
-        /// This method encodes the (x, y, z) components of the normal vector
-        /// into the (red, green, blue) channels of the returned color.  In
-        /// order to represent the vector as a color, each coordinate of the
-        /// normal is mapped from the -1.0 to 1.0 range to the 0 to 255 range.
-        ///
-        /// The bump height specifies the ratio of spatial resolution to
-        /// elevation resolution.  For example, if your noise map has a
-        /// spatial resolution of 30 meters and an elevation resolution of one
-        /// meter, set the bump height to 1.0 / 30.0.
-        /// 
-        /// The spatial resolution and elevation resolution are determined by
-        /// the application.
-        /// </summary>
-        /// <param name="nc">The height of the given point in the noise map</param>
-        /// <param name="nr">The height of the left neighbor</param>
-        /// <param name="nu">The height of the up neighbor</param>
-        /// <param name="bumpHeight">The bump height</param>
-        /// <returns>The normal vector represented as a color</returns>
-        private IColor CalcNormalColor(float nc, float nr, float nu, float bumpHeight)
-        {
-            // Calculate the surface normal.
-            nc *= bumpHeight;
-            nr *= bumpHeight;
-            nu *= bumpHeight;
+	    /// <summary>
+	    ///     This object requires three points (the initial point and the right
+	    ///     and up neighbors) to calculate the normal vector at that point.
+	    ///     If wrapping is/ enabled, and the initial point is on the edge of
+	    ///     the noise map, the appropriate neighbors that lie outside of the
+	    ///     noise map will "wrap" to the opposite side(s) of the noise map.
+	    ///     Otherwise, the appropriate neighbors are cropped to the edge of
+	    ///     the noise map.
+	    ///     Enabling wrapping is useful when creating spherical and tileable
+	    ///     normal maps.
+	    /// </summary>
+	    protected bool _WrapEnabled;
 
-            float ncr = (nc - nr);
-            float ncu = (nc - nu);
-            var d = (float) Math.Sqrt((ncu*ncu) + (ncr*ncr) + 1);
-            float vxc = (nc - nr)/d;
-            float vyc = (nc - nu)/d;
-            float vzc = 1.0f/d;
+	    /// <summary>
+	    ///     The bump height specifies the ratio of spatial resolution to
+	    ///     elevation resolution.  For example, if your noise map has a
+	    ///     spatial resolution of 30 meters and an elevation resolution of one
+	    ///     meter, set the bump height to 1.0 / 30.0.
+	    ///     The spatial resolution and elevation resolution are determined by
+	    ///     the application.
+	    /// </summary>
+	    protected float _bumpHeight;
 
-            // Map the normal range from the (-1.0 .. +1.0) range to the (0 .. 255)
-            // range.
-            byte xc, yc, zc;
+		#endregion
 
-            xc = (byte) (Libnoise.FastFloor((vxc + 1.0f)*127.5f) & 0xff);
-            yc = (byte) (Libnoise.FastFloor((vyc + 1.0f)*127.5f) & 0xff);
-            zc = (byte) (Libnoise.FastFloor((vzc + 1.0f)*127.5f) & 0xff);
+		#region Accessors
 
-            //
-            //zc = (byte)((int)((floor)((vzc + 1.0f) * 127.5f)) & 0xff); 
+	    /// <summary>
+	    ///     Enables or disables noise-map wrapping.
+	    ///     This object requires five points (the initial point and its four
+	    ///     neighbors) to calculate light shading.  If wrapping is enabled,
+	    ///     and the initial point is on the edge of the noise map, the
+	    ///     appropriate neighbors that lie outside of the noise map will
+	    ///     "wrap" to the opposite side(s) of the noise map.  Otherwise, the
+	    ///     appropriate neighbors are cropped to the edge of the noise map.
+	    ///     Enabling wrapping is useful when creating spherical renderings and
+	    ///     tileable textures.
+	    /// </summary>
+	    public bool WrapEnabled
+		{
+			get => _WrapEnabled;
+			set => _WrapEnabled = value;
+		}
 
-            return new Color(xc, yc, zc, 255);
-        }
+	    /// <summary>
+	    ///     Gets or Sets the bump height
+	    /// </summary>
+	    public float BumpHeight
+		{
+			get => _bumpHeight;
+			set => _bumpHeight = value;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

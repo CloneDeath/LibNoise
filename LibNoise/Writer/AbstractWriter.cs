@@ -1,103 +1,101 @@
-﻿namespace LibNoise.Writer
-{
-    using System;
-    using System.IO;
+﻿using System;
+using System.IO;
 
+namespace LibNoise.Writer
+{
     /// <summary>
-    /// Abstract base class for all writer classes
+    ///     Abstract base class for all writer classes
     /// </summary>
     public abstract class AbstractWriter
-    {
-        #region Fields
+	{
+		#region Accessors
 
-        /// <summary>
-        /// the name of the file to write.
-        /// </summary>
-        protected string _filename;
+	    /// <summary>
+	    ///     Gets or sets the name of the file to write.
+	    /// </summary>
+	    public string Filename
+		{
+			get => _filename;
+			set => _filename = value;
+		}
 
-        /// <summary>
-        /// A binary writer
-        /// </summary>
-        protected BinaryWriter _writer;
+		#endregion
 
-        #endregion
+		#region Interaction
 
-        #region Accessors
+	    /// <summary>
+	    ///     Writes the destination content
+	    /// </summary>
+	    public abstract void WriteFile();
 
-        /// <summary>
-        /// Gets or sets the name of the file to write.
-        /// </summary>
-        public string Filename
-        {
-            get { return _filename; }
-            set { _filename = value; }
-        }
+		#endregion
 
-        #endregion
+		#region Fields
 
-        #region Interaction
+	    /// <summary>
+	    ///     the name of the file to write.
+	    /// </summary>
+	    protected string _filename;
 
-        /// <summary>
-        /// Writes the destination content
-        /// </summary>
-        public abstract void WriteFile();
+	    /// <summary>
+	    ///     A binary writer
+	    /// </summary>
+	    protected BinaryWriter _writer;
 
-        #endregion
+		#endregion
 
-        #region internal
+		#region internal
 
-        /// <summary>
-        /// Create a new BinaryWriter
-        /// </summary>
-        protected void OpenFile()
-        {
-            if (_writer != null)
-                return; // Should throw exception ?
+	    /// <summary>
+	    ///     Create a new BinaryWriter
+	    /// </summary>
+	    protected void OpenFile()
+		{
+			if (_writer != null)
+				return; // Should throw exception ?
 
-            if (File.Exists(_filename))
-            {
-                try
-                {
-                    File.Delete(_filename);
-                }
-                catch (Exception e)
-                {
-                    throw new IOException("Unable to delete destination file", e);
-                }
-            }
+			if (File.Exists(_filename))
+				try
+				{
+					File.Delete(_filename);
+				}
+				catch (Exception e)
+				{
+					throw new IOException("Unable to delete destination file", e);
+				}
 
-            BufferedStream stream;
+			BufferedStream stream;
 
-            try
-            {
-                stream = new BufferedStream(new FileStream(_filename, FileMode.Create));
-            }
-            catch (Exception e)
-            {
-                throw new IOException("Unable to create destination file", e);
-            }
+			try
+			{
+				stream = new BufferedStream(new FileStream(_filename, FileMode.Create));
+			}
+			catch (Exception e)
+			{
+				throw new IOException("Unable to create destination file", e);
+			}
 
-            _writer = new BinaryWriter(stream);
-        }
+			_writer = new BinaryWriter(stream);
+		}
 
 
-        /// <summary>
-        /// Release a BinaryWriter previously opened
-        /// </summary>
-        protected void CloseFile()
-        {
-            try
-            {
-                _writer.Flush();
-                _writer.Close();
-                _writer = null;
-            }
-            catch (Exception e)
-            {
-                throw new IOException("Unable to release stream", e);
-            }
-        }
+	    /// <summary>
+	    ///     Release a BinaryWriter previously opened
+	    /// </summary>
+	    protected void CloseFile()
+		{
+			try
+			{
+				_writer.Flush();
+				_writer.Close();
+				_writer = null;
+			}
+			catch (Exception e)
+			{
+				throw new IOException("Unable to release stream", e);
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

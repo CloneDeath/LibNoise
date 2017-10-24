@@ -5,169 +5,167 @@
 namespace LibNoise.Filter
 {
     /// <summary>
-    /// Noise module that outputs three-dimensional "billowy" noise
-    /// Hit snoise is also known as Turbulence fBM and generates "billowy" 
-    /// noise suitable for clouds and rocks.
-    ///
-    /// This noise module is nearly identical to SumFractal except
-    /// this noise module modifies each octave with an absolute-value
-    /// function. Optionally, a scaling factor and a bias addition can be applied 
-    /// each octave.
-    /// 
-    /// The original noise::module::billow has scale of 2 and a bias of -1.
+    ///     Noise module that outputs three-dimensional "billowy" noise
+    ///     Hit snoise is also known as Turbulence fBM and generates "billowy"
+    ///     noise suitable for clouds and rocks.
+    ///     This noise module is nearly identical to SumFractal except
+    ///     this noise module modifies each octave with an absolute-value
+    ///     function. Optionally, a scaling factor and a bias addition can be applied
+    ///     each octave.
+    ///     The original noise::module::billow has scale of 2 and a bias of -1.
     /// </summary>
     public class Billow : FilterModule, IModule3D, IModule2D
-    {
-        #region Constants
+	{
+		#region IModule2D Members
 
-        /// <summary>
-        /// Default scale
-        /// noise module.
-        /// </summary>
-        public const float DefaultScale = 1.0f;
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y)
+		{
+			float signal;
+			float value;
+			int curOctave;
 
-        /// <summary>
-        /// Default bias
-        /// noise module.
-        /// </summary>
-        public const float DefaultBias = 0.0f;
+			x *= _frequency;
+			y *= _frequency;
 
-        #endregion
+			// Initialize value, fBM starts with 0
+			value = 0;
 
-        #region Fields
+			// Inner loop of spectral construction, where the fractal is built
 
-        /// <summary>
-        /// the bias to apply to the scaled output value from the source module.
-        /// </summary>
-        protected float PBias = DefaultBias;
+			for (curOctave = 0; curOctave < _octaveCount; curOctave++)
+			{
+				// Get the coherent-noise value.
+				signal = _source2D.GetValue(x, y) * _spectralWeights[curOctave];
 
-        /// <summary>
-        /// the scaling factor to apply to the output value from the source module.
-        /// </summary>
-        protected float PScale = DefaultScale;
+				if (signal < 0.0f)
+					signal = -signal;
 
-        #endregion
+				// Add the signal to the output value.
+				value += signal * PScale + PBias;
 
-        #region Accessors
+				// Go to the next octave.
+				x *= _lacunarity;
+				y *= _lacunarity;
+			}
 
-        /// <summary>
-        /// Gets or sets the scale value.
-        /// </summary>
-        public float Scale
-        {
-            get { return PScale; }
-            set { PScale = value; }
-        }
+			//take care of remainder in _octaveCount
+			var remainder = _octaveCount - (int) _octaveCount;
+			if (remainder > 0)
+				value += PScale * remainder * _source2D.GetValue(x, y) * _spectralWeights[curOctave] + PBias;
 
-        /// <summary>
-        /// Gets or sets the bias value.
-        /// </summary>
-        public float Bias
-        {
-            get { return PBias; }
-            set { PBias = value; }
-        }
+			return value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Ctor/Dtor
+		#region IModule3D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <param name="z">The input coordinate on the z-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y, float z)
+		{
+			int curOctave;
 
-        #region IModule2D Members
+			x *= _frequency;
+			y *= _frequency;
+			z *= _frequency;
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y)
-        {
-            float signal;
-            float value;
-            int curOctave;
+			// Initialize value, fBM starts with 0
+			float value = 0;
 
-            x *= _frequency;
-            y *= _frequency;
+			// Inner loop of spectral construction, where the fractal is built
+			for (curOctave = 0; curOctave < _octaveCount; curOctave++)
+			{
+				// Get the coherent-noise value.
+				var signal = _source3D.GetValue(x, y, z) * _spectralWeights[curOctave];
 
-            // Initialize value, fBM starts with 0
-            value = 0;
+				if (signal < 0.0f)
+					signal = -signal;
 
-            // Inner loop of spectral construction, where the fractal is built
+				// Add the signal to the output value.
+				value += signal * PScale + PBias;
 
-            for (curOctave = 0; curOctave < _octaveCount; curOctave++)
-            {
-                // Get the coherent-noise value.
-                signal = _source2D.GetValue(x, y)*_spectralWeights[curOctave];
+				// Go to the next octave.
+				x *= _lacunarity;
+				y *= _lacunarity;
+				z *= _lacunarity;
+			}
 
-                if (signal < 0.0f)
-                    signal = -signal;
+			//take care of remainder in _octaveCount
+			var remainder = _octaveCount - (int) _octaveCount;
+			if (remainder > 0.0f)
+				value += PScale * remainder * _source3D.GetValue(x, y, z) * _spectralWeights[curOctave] + PBias;
 
-                // Add the signal to the output value.
-                value += (signal*PScale) + PBias;
+			return value;
+		}
 
-                // Go to the next octave.
-                x *= _lacunarity;
-                y *= _lacunarity;
-            }
+		#endregion
 
-            //take care of remainder in _octaveCount
-            float remainder = _octaveCount - (int) _octaveCount;
-            if (remainder > 0)
-                value += (PScale*remainder*_source2D.GetValue(x, y)*_spectralWeights[curOctave]) + PBias;
+		#region Constants
 
-            return value;
-        }
+	    /// <summary>
+	    ///     Default scale
+	    ///     noise module.
+	    /// </summary>
+	    public const float DefaultScale = 1.0f;
 
-        #endregion
+	    /// <summary>
+	    ///     Default bias
+	    ///     noise module.
+	    /// </summary>
+	    public const float DefaultBias = 0.0f;
 
-        #region IModule3D Members
+		#endregion
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <param name="z">The input coordinate on the z-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y, float z)
-        {
-            int curOctave;
+		#region Fields
 
-            x *= _frequency;
-            y *= _frequency;
-            z *= _frequency;
+	    /// <summary>
+	    ///     the bias to apply to the scaled output value from the source module.
+	    /// </summary>
+	    protected float PBias = DefaultBias;
 
-            // Initialize value, fBM starts with 0
-            float value = 0;
+	    /// <summary>
+	    ///     the scaling factor to apply to the output value from the source module.
+	    /// </summary>
+	    protected float PScale = DefaultScale;
 
-            // Inner loop of spectral construction, where the fractal is built
-            for (curOctave = 0; curOctave < _octaveCount; curOctave++)
-            {
-                // Get the coherent-noise value.
-                float signal = _source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
+		#endregion
 
-                if (signal < 0.0f)
-                    signal = -signal;
+		#region Accessors
 
-                // Add the signal to the output value.
-                value += (signal*PScale) + PBias;
+	    /// <summary>
+	    ///     Gets or sets the scale value.
+	    /// </summary>
+	    public float Scale
+		{
+			get => PScale;
+			set => PScale = value;
+		}
 
-                // Go to the next octave.
-                x *= _lacunarity;
-                y *= _lacunarity;
-                z *= _lacunarity;
-            }
+	    /// <summary>
+	    ///     Gets or sets the bias value.
+	    /// </summary>
+	    public float Bias
+		{
+			get => PBias;
+			set => PBias = value;
+		}
 
-            //take care of remainder in _octaveCount
-            float remainder = _octaveCount - (int) _octaveCount;
-            if (remainder > 0.0f)
-                value += (PScale*remainder*_source3D.GetValue(x, y, z)*_spectralWeights[curOctave]) + PBias;
+		#endregion
 
-            return value;
-        }
+		#region Ctor/Dtor
 
-        #endregion
-    }
+		#endregion
+	}
 }

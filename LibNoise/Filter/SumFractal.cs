@@ -4,109 +4,106 @@
 namespace LibNoise.Filter
 {
     /// <summary>
-    /// Noise module that outputs 3-dimensional Sum Fractal noise. This noise
-    /// is also known as "Fractional BrownianMotion noise"
-    ///
-    /// Sum Fractal noise is the sum of several coherent-noise functions of
-    /// ever-increasing frequencies and ever-decreasing amplitudes.
-    /// 
-    /// This class implements the original noise::module::Perlin
-    /// 
+    ///     Noise module that outputs 3-dimensional Sum Fractal noise. This noise
+    ///     is also known as "Fractional BrownianMotion noise"
+    ///     Sum Fractal noise is the sum of several coherent-noise functions of
+    ///     ever-increasing frequencies and ever-decreasing amplitudes.
+    ///     This class implements the original noise::module::Perlin
     /// </summary>
     public class SumFractal : FilterModule, IModule3D, IModule2D
-    {
-        #region Ctor/Dtor
+	{
+		#region IModule2D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y)
+		{
+			int curOctave;
 
-        #region IModule2D Members
+			x *= _frequency;
+			y *= _frequency;
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y)
-        {
-            int curOctave;
+			// Initialize value, fBM starts with 0
+			float value = 0;
 
-            x *= _frequency;
-            y *= _frequency;
+			// Inner loop of spectral construction, where the fractal is built
 
-            // Initialize value, fBM starts with 0
-            float value = 0;
+			for (curOctave = 0; curOctave < _octaveCount; curOctave++)
+			{
+				// Get the coherent-noise value.
+				var signal = _source2D.GetValue(x, y) * _spectralWeights[curOctave];
 
-            // Inner loop of spectral construction, where the fractal is built
+				// Add the signal to the output value.
+				value += signal;
 
-            for (curOctave = 0; curOctave < _octaveCount; curOctave++)
-            {
-                // Get the coherent-noise value.
-                float signal = _source2D.GetValue(x, y)*_spectralWeights[curOctave];
+				// Go to the next octave.
+				x *= _lacunarity;
+				y *= _lacunarity;
+			}
 
-                // Add the signal to the output value.
-                value += signal;
+			//take care of remainder in _octaveCount
+			var remainder = _octaveCount - (int) _octaveCount;
+			if (remainder > 0.0f)
+				value += remainder * _source2D.GetValue(x, y) * _spectralWeights[curOctave];
 
-                // Go to the next octave.
-                x *= _lacunarity;
-                y *= _lacunarity;
-            }
+			return value;
+		}
 
-            //take care of remainder in _octaveCount
-            float remainder = _octaveCount - (int) _octaveCount;
-            if (remainder > 0.0f)
-                value += remainder*_source2D.GetValue(x, y)*_spectralWeights[curOctave];
+		#endregion
 
-            return value;
-        }
+		#region IModule3D Members
 
-        #endregion
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <param name="z">The input coordinate on the z-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y, float z)
+		{
+			float signal;
+			float value;
+			int curOctave;
 
-        #region IModule3D Members
+			x *= _frequency;
+			y *= _frequency;
+			z *= _frequency;
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <param name="z">The input coordinate on the z-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y, float z)
-        {
-            float signal;
-            float value;
-            int curOctave;
+			// Initialize value, fBM starts with 0
+			value = 0;
 
-            x *= _frequency;
-            y *= _frequency;
-            z *= _frequency;
+			// Inner loop of spectral construction, where the fractal is built
+			for (curOctave = 0; curOctave < _octaveCount; curOctave++)
+			{
+				// Get the coherent-noise value.
+				signal = _source3D.GetValue(x, y, z) * _spectralWeights[curOctave];
 
-            // Initialize value, fBM starts with 0
-            value = 0;
+				// Add the signal to the output value.
+				value += signal;
 
-            // Inner loop of spectral construction, where the fractal is built
-            for (curOctave = 0; curOctave < _octaveCount; curOctave++)
-            {
-                // Get the coherent-noise value.
-                signal = _source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
+				// Go to the next octave.
+				x *= _lacunarity;
+				y *= _lacunarity;
+				z *= _lacunarity;
+			}
 
-                // Add the signal to the output value.
-                value += signal;
+			//take care of remainder in _octaveCount
+			var remainder = _octaveCount - (int) _octaveCount;
+			if (remainder > 0.0f)
+				value += remainder * _source3D.GetValue(x, y, z) * _spectralWeights[curOctave];
 
-                // Go to the next octave.
-                x *= _lacunarity;
-                y *= _lacunarity;
-                z *= _lacunarity;
-            }
+			return value;
+		}
 
-            //take care of remainder in _octaveCount
-            float remainder = _octaveCount - (int) _octaveCount;
-            if (remainder > 0.0f)
-                value += remainder*_source3D.GetValue(x, y, z)*_spectralWeights[curOctave];
+		#endregion
 
-            return value;
-        }
+		#region Ctor/Dtor
 
-        #endregion
-    }
+		#endregion
+	}
 }

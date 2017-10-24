@@ -1,151 +1,148 @@
 ﻿namespace LibNoise.Transformer
 {
     /// <summary>
-    /// Noise module that moves the coordinates of the input value before
-    /// returning the output value from a source module.
-    ///
-    /// The GetValue() method moves the ( x, y, z ) coordinates of
-    /// the input value by a translation amount before returning the output
-    /// value from the source module. 
-    ///
-    ///
+    ///     Noise module that moves the coordinates of the input value before
+    ///     returning the output value from a source module.
+    ///     The GetValue() method moves the ( x, y, z ) coordinates of
+    ///     the input value by a translation amount before returning the output
+    ///     value from the source module.
     /// </summary>
     public class TranslatePoint : TransformerModule, IModule3D
-    {
-        #region Connstant
+	{
+		#region IModule3D Members
 
-        /// <summary>
-        /// The default translation amount to apply to the x coordinate
-        /// </summary>
-        public const float DEFAULT_TRANSLATE_X = 1.0f;
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <param name="z">The input coordinate on the z-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y, float z)
+		{
+			return ((IModule3D) _sourceModule).GetValue(x + _xTranslate, y + _yTranslate, z + _zTranslate);
+		}
 
-        /// <summary>
-        /// The default translation amount to apply to the y coordinate
-        /// </summary>
-        public const float DEFAULT_TRANSLATE_Y = 1.0f;
+		#endregion
 
-        /// <summary>
-        /// The default translation amount to apply to the z coordinate
-        /// </summary>
-        public const float DEFAULT_TRANSLATE_Z = 1.0f;
+		#region Connstant
 
-        #endregion
+	    /// <summary>
+	    ///     The default translation amount to apply to the x coordinate
+	    /// </summary>
+	    public const float DEFAULT_TRANSLATE_X = 1.0f;
 
-        #region Fields
+	    /// <summary>
+	    ///     The default translation amount to apply to the y coordinate
+	    /// </summary>
+	    public const float DEFAULT_TRANSLATE_Y = 1.0f;
 
-        /// <summary>
-        /// The source input module
-        /// </summary>
-        protected IModule _sourceModule;
+	    /// <summary>
+	    ///     The default translation amount to apply to the z coordinate
+	    /// </summary>
+	    public const float DEFAULT_TRANSLATE_Z = 1.0f;
 
-        /// <summary>
-        /// the translation amount to apply to the x coordinate
-        /// </summary>
-        protected float _xTranslate = DEFAULT_TRANSLATE_X;
+		#endregion
 
-        /// <summary>
-        /// the translation amount to apply to the y coordinate
-        /// </summary>
-        protected float _yTranslate = DEFAULT_TRANSLATE_Y;
+		#region Fields
 
-        /// <summary>
-        /// the translation amount to apply to the z coordinate
-        /// </summary>
-        protected float _zTranslate = DEFAULT_TRANSLATE_Z;
+	    /// <summary>
+	    ///     The source input module
+	    /// </summary>
+	    protected IModule _sourceModule;
 
-        #endregion
+	    /// <summary>
+	    ///     the translation amount to apply to the x coordinate
+	    /// </summary>
+	    protected float _xTranslate = DEFAULT_TRANSLATE_X;
 
-        #region Accessors
+	    /// <summary>
+	    ///     the translation amount to apply to the y coordinate
+	    /// </summary>
+	    protected float _yTranslate = DEFAULT_TRANSLATE_Y;
 
-        /// <summary>
-        /// Gets or sets the source module
-        /// </summary>
-        public IModule SourceModule
-        {
-            get { return _sourceModule; }
-            set { _sourceModule = value; }
-        }
+	    /// <summary>
+	    ///     the translation amount to apply to the z coordinate
+	    /// </summary>
+	    protected float _zTranslate = DEFAULT_TRANSLATE_Z;
 
-        /// <summary>
-        /// Gets or sets the translation amount to apply to the x coordinate
-        /// </summary>
-        public float XTranslate
-        {
-            get { return _xTranslate; }
-            set { _xTranslate = value; }
-        }
+		#endregion
 
-        /// <summary>
-        /// Gets or sets the translation amount to apply to the y coordinate
-        /// </summary>
-        public float YTranslate
-        {
-            get { return _yTranslate; }
-            set { _yTranslate = value; }
-        }
+		#region Accessors
 
-        /// <summary>
-        /// Gets or sets the translation amount to apply to the z coordinate
-        /// </summary>
-        public float ZTranslate
-        {
-            get { return _zTranslate; }
-            set { _zTranslate = value; }
-        }
+	    /// <summary>
+	    ///     Gets or sets the source module
+	    /// </summary>
+	    public IModule SourceModule
+		{
+			get => _sourceModule;
+			set => _sourceModule = value;
+		}
 
-        #endregion
+	    /// <summary>
+	    ///     Gets or sets the translation amount to apply to the x coordinate
+	    /// </summary>
+	    public float XTranslate
+		{
+			get => _xTranslate;
+			set => _xTranslate = value;
+		}
 
-        #region Ctor/Dtor
+	    /// <summary>
+	    ///     Gets or sets the translation amount to apply to the y coordinate
+	    /// </summary>
+	    public float YTranslate
+		{
+			get => _yTranslate;
+			set => _yTranslate = value;
+		}
 
-        /// <summary>
-        /// Create a new noise module with default values
-        /// </summary>
-        public TranslatePoint()
-        {
-        }
+	    /// <summary>
+	    ///     Gets or sets the translation amount to apply to the z coordinate
+	    /// </summary>
+	    public float ZTranslate
+		{
+			get => _zTranslate;
+			set => _zTranslate = value;
+		}
+
+		#endregion
+
+		#region Ctor/Dtor
+
+	    /// <summary>
+	    ///     Create a new noise module with default values
+	    /// </summary>
+	    public TranslatePoint()
+		{
+		}
 
 
-        /// <summary>
-        /// Create a new noise module with given values
-        /// </summary>
-        /// <param name="source">the source module</param>
-        public TranslatePoint(IModule source)
-        {
-            _sourceModule = source;
-        }
+	    /// <summary>
+	    ///     Create a new noise module with given values
+	    /// </summary>
+	    /// <param name="source">the source module</param>
+	    public TranslatePoint(IModule source)
+		{
+			_sourceModule = source;
+		}
 
 
-        /// <summary>
-        /// Create a new noise module with given values
-        /// </summary>
-        /// <param name="source">the source module</param>
-        /// <param name="x">the translation amount to apply to the x coordinate</param>
-        /// <param name="y">the translation amount to apply to the y coordinate</param>
-        /// <param name="z">the translation amount to apply to the z coordinate</param>
-        public TranslatePoint(IModule source, float x, float y, float z)
-            : this(source)
-        {
-            _xTranslate = x;
-            _yTranslate = y;
-            _zTranslate = z;
-        }
+	    /// <summary>
+	    ///     Create a new noise module with given values
+	    /// </summary>
+	    /// <param name="source">the source module</param>
+	    /// <param name="x">the translation amount to apply to the x coordinate</param>
+	    /// <param name="y">the translation amount to apply to the y coordinate</param>
+	    /// <param name="z">the translation amount to apply to the z coordinate</param>
+	    public TranslatePoint(IModule source, float x, float y, float z)
+			: this(source)
+		{
+			_xTranslate = x;
+			_yTranslate = y;
+			_zTranslate = z;
+		}
 
-        #endregion
-
-        #region IModule3D Members
-
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <param name="z">The input coordinate on the z-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y, float z)
-        {
-            return ((IModule3D) _sourceModule).GetValue(x + _xTranslate, y + _yTranslate, z + _zTranslate);
-        }
-
-        #endregion
-    }
+		#endregion
+	}
 }

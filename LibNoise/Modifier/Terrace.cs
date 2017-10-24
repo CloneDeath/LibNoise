@@ -1,249 +1,230 @@
-﻿namespace LibNoise.Modifier
-{
-    using System;
-    using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+namespace LibNoise.Modifier
+{
     /// <summary>
-    /// Noise module that maps the output value from a source module onto a
-    /// terrace-forming curve.
-    ///
-    /// This noise module maps the output value from the source module onto a
-    /// terrace-forming curve.  The start of this curve has a slope of zero;
-    /// its slope then smoothly increases.  This curve also contains
-    /// <i>control points</i> which resets the slope to zero at that point,
-    /// producing a "terracing" effect.  Refer to the following illustration:
-    ///
-    /// To add a control point to this noise module, call the
-    /// AddControlPoint() method.
-    ///
-    /// An application must add a minimum of two control points to the curve.
-    /// If this is not done, the GetValue() method fails.  The control points
-    /// can have any value, although no two control points can have the same
-    /// value.  There is no limit to the number of control points that can be
-    /// added to the curve.
-    ///
-    /// This noise module clamps the output value from the source module if
-    /// that value is less than the value of the lowest control point or
-    /// greater than the value of the highest control point.
-    ///
-    /// This noise module is often used to generate terrain features such as
-    /// your stereotypical desert canyon.
+    ///     Noise module that maps the output value from a source module onto a
+    ///     terrace-forming curve.
+    ///     This noise module maps the output value from the source module onto a
+    ///     terrace-forming curve.  The start of this curve has a slope of zero;
+    ///     its slope then smoothly increases.  This curve also contains
+    ///     <i>control points</i> which resets the slope to zero at that point,
+    ///     producing a "terracing" effect.  Refer to the following illustration:
+    ///     To add a control point to this noise module, call the
+    ///     AddControlPoint() method.
+    ///     An application must add a minimum of two control points to the curve.
+    ///     If this is not done, the GetValue() method fails.  The control points
+    ///     can have any value, although no two control points can have the same
+    ///     value.  There is no limit to the number of control points that can be
+    ///     added to the curve.
+    ///     This noise module clamps the output value from the source module if
+    ///     that value is less than the value of the lowest control point or
+    ///     greater than the value of the highest control point.
+    ///     This noise module is often used to generate terrain features such as
+    ///     your stereotypical desert canyon.
     /// </summary>
     public class Terrace : ModifierModule, IModule3D
-    {
-        #region Fields
+	{
+		#region Accessors
 
-        /// <summary>
-        /// 
-        /// </summary>
-        protected List<float> _controlPoints = new List<float>(2);
+	    /// <summary>
+	    ///     gets or sets the inversion of the terrace-forming curve between the control points
+	    /// </summary>
+	    public bool Invert
+		{
+			get => _invert;
+			set => _invert = value;
+		}
 
-        /// <summary>
-        /// Enables or disables the inversion of the terrace-forming curve
-        /// between the control points.
-        /// </summary>
-        protected bool _invert = false;
+		#endregion
 
-        #endregion
+		#region IModule3D Members
 
-        #region Accessors
+	    /// <summary>
+	    ///     Generates an output value given the coordinates of the specified input value.
+	    /// </summary>
+	    /// <param name="x">The input coordinate on the x-axis.</param>
+	    /// <param name="y">The input coordinate on the y-axis.</param>
+	    /// <param name="z">The input coordinate on the z-axis.</param>
+	    /// <returns>The resulting output value.</returns>
+	    public float GetValue(float x, float y, float z)
+		{
+			// Get the output value from the source module.
+			var sourceModuleValue = ((IModule3D) _sourceModule).GetValue(x, y, z);
 
-        /// <summary>
-        /// gets or sets the inversion of the terrace-forming curve between the control points
-        /// </summary>
-        public bool Invert
-        {
-            get { return _invert; }
-            set { _invert = value; }
-        }
+			// Find the first element in the control point array that has a value
+			// larger than the output value from the source module.
+			int indexPos;
+			for (indexPos = 0; indexPos < _controlPoints.Count; indexPos++)
+				if (sourceModuleValue < _controlPoints[indexPos])
+					break;
 
-        #endregion
+			// Find the two nearest control points so that we can map their values
+			// onto a quadratic curve.
+			var index0 = Libnoise.Clamp(indexPos - 1, 0, _controlPoints.Count - 1);
+			var index1 = Libnoise.Clamp(indexPos, 0, _controlPoints.Count - 1);
 
-        #region Ctor/Dtor
+			// If some control points are missing (which occurs if the output value from
+			// the source module is greater than the largest value or less than the
+			// smallest value of the control point array), get the value of the nearest
+			// control point and exit now.
+			if (index0 == index1)
+				return _controlPoints[index1];
 
-        public Terrace()
-        {
-        }
+			// Compute the alpha value used for linear interpolation.
+			var value0 = _controlPoints[index0];
+			var value1 = _controlPoints[index1];
+			var alpha = (sourceModuleValue - value0) / (value1 - value0);
 
+			if (_invert)
+			{
+				alpha = 1.0f - alpha;
+				Libnoise.SwapValues(ref value0, ref value1);
+			}
 
-        public Terrace(IModule source)
-            : base(source)
-        {
-        }
+			// Squaring the alpha produces the terrace effect.
+			alpha *= alpha;
 
+			// Now perform the linear interpolation given the alpha value.
+			return Libnoise.Lerp(value0, value1, alpha);
+		}
 
-        public Terrace(IModule source, bool invert)
-            : base(source)
-        {
-            _invert = invert;
-        }
+		#endregion
 
-        #endregion
+		#region Internal
 
-        #region Interaction
+	    /// <summary>
+	    /// </summary>
+	    protected void SortControlPoints()
+		{
+			_controlPoints.Sort(delegate(float p1, float p2)
+			{
+				if (p1 > p2)
+					return 1;
+				if (p1 < p2)
+					return -1;
+				return 0;
+			});
+		}
 
-        /// <summary>
-        /// Adds a control point to the curve.
-        ///
-        /// No two control points have the same input value.
-        ///
-        /// @throw System.ArgumentException if two control points have the same input value.
-        ///
-        /// It does not matter which order these points are added.
-        /// </summary>
-        /// <param name="input">The input value stored in the control point.</param>
-        public void AddControlPoint(float input)
-        {
-            if (_controlPoints.Contains(input))
-            {
-                throw new ArgumentException(
-                    String.Format(
-                        "Cannont insert ControlPoint({0}) : Each control point is required to contain a unique input value",
-                        input));
-            }
-            else
-            {
-                _controlPoints.Add(input);
-                SortControlPoints();
-            }
-        }
+		#endregion
 
+		#region Fields
 
-        /// <summary>
-        /// Return the size of the ControlPoint list
-        /// </summary>
-        /// <returns>The number of ControlPoint in the list</returns>
-        public int CountControlPoints()
-        {
-            return _controlPoints.Count;
-        }
+	    /// <summary>
+	    /// </summary>
+	    protected List<float> _controlPoints = new List<float>(2);
 
+	    /// <summary>
+	    ///     Enables or disables the inversion of the terrace-forming curve
+	    ///     between the control points.
+	    /// </summary>
+	    protected bool _invert;
 
-        /// <summary>
-        /// Returns a read-only IList<ControlPoint> wrapper for the current ControlPoint list.
-        /// </summary>
-        /// <returns>The read only list</returns>
-        public IList<float> getControlPoints()
-        {
-            return _controlPoints.AsReadOnly();
-        }
+		#endregion
 
+		#region Ctor/Dtor
 
-        /// <summary>
-        /// Deletes all the control points on the curve.
-        /// </summary>
-        public void ClearControlPoints()
-        {
-            _controlPoints.Clear();
-        }
+		public Terrace()
+		{
+		}
 
 
-        /// <summary>
-        /// Creates a number of equally-spaced control points that range from
-        /// -1 to +1.
-        ///
-        /// The number of control points must be greater than or equal to 2
-        /// The previous control points on the terrace-forming curve are deleted.
-        ///
-        /// Two or more control points define the terrace-forming curve.  The
-        /// start of this curve has a slope of zero; its slope then smoothly
-        /// increases.  At the control points, its slope resets to zero.
-        /// 
-        /// @throw ArgumentException if an invalid parameter was
-        /// specified
-        /// </summary>
-        /// <param name="controlPointCount">The number of control points to generate.</param>
-        public void MakeControlPoints(int controlPointCount)
-        {
-            if (controlPointCount < 2)
-                throw new ArgumentException("Two or more control points must be specified.");
+		public Terrace(IModule source)
+			: base(source)
+		{
+		}
 
-            ClearControlPoints();
 
-            float terraceStep = 2.0f/(controlPointCount - 1.0f);
-            float curValue = -1.0f;
-            for (int i = 0; i < controlPointCount; i++)
-            {
-                AddControlPoint(curValue);
-                curValue += terraceStep;
-            }
-        }
+		public Terrace(IModule source, bool invert)
+			: base(source)
+		{
+			_invert = invert;
+		}
 
-        #endregion
+		#endregion
 
-        #region IModule3D Members
+		#region Interaction
 
-        /// <summary>
-        /// Generates an output value given the coordinates of the specified input value.
-        /// </summary>
-        /// <param name="x">The input coordinate on the x-axis.</param>
-        /// <param name="y">The input coordinate on the y-axis.</param>
-        /// <param name="z">The input coordinate on the z-axis.</param>
-        /// <returns>The resulting output value.</returns>
-        public float GetValue(float x, float y, float z)
-        {
-            // Get the output value from the source module.
-            float sourceModuleValue = ((IModule3D) _sourceModule).GetValue(x, y, z);
+	    /// <summary>
+	    ///     Adds a control point to the curve.
+	    ///     No two control points have the same input value.
+	    ///     @throw System.ArgumentException if two control points have the same input value.
+	    ///     It does not matter which order these points are added.
+	    /// </summary>
+	    /// <param name="input">The input value stored in the control point.</param>
+	    public void AddControlPoint(float input)
+		{
+			if (_controlPoints.Contains(input))
+			{
+				throw new ArgumentException(
+					string.Format(
+						"Cannont insert ControlPoint({0}) : Each control point is required to contain a unique input value",
+						input));
+			}
+			_controlPoints.Add(input);
+			SortControlPoints();
+		}
 
-            // Find the first element in the control point array that has a value
-            // larger than the output value from the source module.
-            int indexPos;
-            for (indexPos = 0; indexPos < _controlPoints.Count; indexPos++)
-            {
-                if (sourceModuleValue < _controlPoints[indexPos])
-                    break;
-            }
 
-            // Find the two nearest control points so that we can map their values
-            // onto a quadratic curve.
-            int index0 = Libnoise.Clamp(indexPos - 1, 0, _controlPoints.Count - 1);
-            int index1 = Libnoise.Clamp(indexPos, 0, _controlPoints.Count - 1);
+	    /// <summary>
+	    ///     Return the size of the ControlPoint list
+	    /// </summary>
+	    /// <returns>The number of ControlPoint in the list</returns>
+	    public int CountControlPoints()
+		{
+			return _controlPoints.Count;
+		}
 
-            // If some control points are missing (which occurs if the output value from
-            // the source module is greater than the largest value or less than the
-            // smallest value of the control point array), get the value of the nearest
-            // control point and exit now.
-            if (index0 == index1)
-                return _controlPoints[index1];
 
-            // Compute the alpha value used for linear interpolation.
-            float value0 = _controlPoints[index0];
-            float value1 = _controlPoints[index1];
-            float alpha = (sourceModuleValue - value0)/(value1 - value0);
+	    /// <summary>
+	    ///     Returns a read-only IList<ControlPoint> wrapper for the current ControlPoint list.
+	    /// </summary>
+	    /// <returns>The read only list</returns>
+	    public IList<float> getControlPoints()
+		{
+			return _controlPoints.AsReadOnly();
+		}
 
-            if (_invert)
-            {
-                alpha = 1.0f - alpha;
-                Libnoise.SwapValues(ref value0, ref value1);
-            }
 
-            // Squaring the alpha produces the terrace effect.
-            alpha *= alpha;
+	    /// <summary>
+	    ///     Deletes all the control points on the curve.
+	    /// </summary>
+	    public void ClearControlPoints()
+		{
+			_controlPoints.Clear();
+		}
 
-            // Now perform the linear interpolation given the alpha value.
-            return Libnoise.Lerp(value0, value1, alpha);
-        }
 
-        #endregion
+	    /// <summary>
+	    ///     Creates a number of equally-spaced control points that range from
+	    ///     -1 to +1.
+	    ///     The number of control points must be greater than or equal to 2
+	    ///     The previous control points on the terrace-forming curve are deleted.
+	    ///     Two or more control points define the terrace-forming curve.  The
+	    ///     start of this curve has a slope of zero; its slope then smoothly
+	    ///     increases.  At the control points, its slope resets to zero.
+	    ///     @throw ArgumentException if an invalid parameter was
+	    ///     specified
+	    /// </summary>
+	    /// <param name="controlPointCount">The number of control points to generate.</param>
+	    public void MakeControlPoints(int controlPointCount)
+		{
+			if (controlPointCount < 2)
+				throw new ArgumentException("Two or more control points must be specified.");
 
-        #region Internal
+			ClearControlPoints();
 
-        /// <summary>
-        /// 
-        /// </summary>
-        protected void SortControlPoints()
-        {
-            _controlPoints.Sort(delegate(float p1, float p2)
-            {
-                if (p1 > p2)
-                    return 1;
-                else if (p1 < p2)
-                    return -1;
-                else
-                    return 0;
-            });
-        }
+			var terraceStep = 2.0f / (controlPointCount - 1.0f);
+			var curValue = -1.0f;
+			for (var i = 0; i < controlPointCount; i++)
+			{
+				AddControlPoint(curValue);
+				curValue += terraceStep;
+			}
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

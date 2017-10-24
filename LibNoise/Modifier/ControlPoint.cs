@@ -1,49 +1,49 @@
-﻿namespace LibNoise.Modifier
-{
-    using System;
+﻿using System;
 
+namespace LibNoise.Modifier
+{
     /// <summary>
-    /// This structure defines a control point.
-    /// Control points are used for defining splines.
+    ///     This structure defines a control point.
+    ///     Control points are used for defining splines.
     /// </summary>
     public struct ControlPoint : IEquatable<ControlPoint>
-    {
-        #region fields
+	{
+		#region fields
 
-        /// <summary>
-        /// The input value stored in the control point
-        /// </summary>
-        public float Input;
+	    /// <summary>
+	    ///     The input value stored in the control point
+	    /// </summary>
+	    public float Input;
 
-        /// <summary>
-        /// The output value stored in the control point
-        /// </summary>
-        public float Output;
+	    /// <summary>
+	    ///     The output value stored in the control point
+	    /// </summary>
+	    public float Output;
 
-        #endregion
+		#endregion
 
-        #region Ctor/Dtor
+		#region Ctor/Dtor
 
-        /// <summary>
-        /// Create a new ControlPoint with given values
-        /// </summary>
-        /// <param name="input">The input value stored in the control point</param>
-        /// <param name="output">The output value stored in the control point</param>
-        public ControlPoint(float input, float output)
-        {
-            Input = input;
-            Output = output;
-        }
+	    /// <summary>
+	    ///     Create a new ControlPoint with given values
+	    /// </summary>
+	    /// <param name="input">The input value stored in the control point</param>
+	    /// <param name="output">The output value stored in the control point</param>
+	    public ControlPoint(float input, float output)
+		{
+			Input = input;
+			Output = output;
+		}
 
-        #endregion
+		#endregion
 
-        #region Interface implementation
+		#region Interface implementation
 
-        public bool Equals(ControlPoint other)
-        {
-            return Input == other.Input;
-        }
+		public bool Equals(ControlPoint other)
+		{
+			return Input == other.Input;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

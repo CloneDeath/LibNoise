@@ -1,81 +1,78 @@
 ﻿namespace LibNoise.Renderer
 {
     /// <summary>
-    /// class for an 8bit-heightmap renderer
+    ///     class for an 8bit-heightmap renderer
     /// </summary>
     public class Heightmap8Renderer : AbstractHeightmapRenderer
-    {
-        #region Fields
+	{
+		#region Fields
 
-        /// <summary>
-        /// The destination heightmap
-        /// </summary>
-        protected Heightmap8 _heightmap;
+	    /// <summary>
+	    ///     The destination heightmap
+	    /// </summary>
+	    protected Heightmap8 _heightmap;
 
-        #endregion
+		#endregion
 
-        #region Accessors
+		#region Accessors
 
-        /// <summary>
-        /// Gets or sets the destination heightmap
-        /// </summary>
-        public Heightmap8 Heightmap
-        {
-            get { return _heightmap; }
-            set { _heightmap = value; }
-        }
+	    /// <summary>
+	    ///     Gets or sets the destination heightmap
+	    /// </summary>
+	    public Heightmap8 Heightmap
+		{
+			get => _heightmap;
+			set => _heightmap = value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Ctor/Dtor
+		#region Ctor/Dtor
 
-        #endregion
+		#endregion
 
-        #region internal
+		#region internal
 
-        /// <summary>
-        /// Sets the new size for the target heightmap.
-        /// 
-        /// </summary>
-        /// <param name="width">width The new width for the heightmap</param>
-        /// <param name="height">height The new height for the heightmap</param>
-        protected override void SetHeightmapSize(int width, int height)
-        {
-            _heightmap.SetSize(width, height);
-        }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        protected override bool CheckHeightmap()
-        {
-            return _heightmap != null;
-        }
+	    /// <summary>
+	    ///     Sets the new size for the target heightmap.
+	    /// </summary>
+	    /// <param name="width">width The new width for the heightmap</param>
+	    /// <param name="height">height The new height for the heightmap</param>
+	    protected override void SetHeightmapSize(int width, int height)
+		{
+			_heightmap.SetSize(width, height);
+		}
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="source"></param>
-        /// <param name="boundDiff"></param>
-        protected override void RenderHeight(int x, int y, float source, float boundDiff)
-        {
-            byte elevation;
+	    /// <summary>
+	    /// </summary>
+	    /// <returns></returns>
+	    protected override bool CheckHeightmap()
+		{
+			return _heightmap != null;
+		}
 
-            if (source <= _lowerHeightBound)
-                elevation = byte.MinValue;
-            else if (source >= _upperHeightBound)
-                elevation = byte.MaxValue;
-            else
-                elevation = (byte) (((source - _lowerHeightBound)/boundDiff)*255.0f);
 
-            _heightmap.SetValue(x, y, elevation);
-        }
+	    /// <summary>
+	    /// </summary>
+	    /// <param name="x"></param>
+	    /// <param name="y"></param>
+	    /// <param name="source"></param>
+	    /// <param name="boundDiff"></param>
+	    protected override void RenderHeight(int x, int y, float source, float boundDiff)
+		{
+			byte elevation;
 
-        #endregion
-    }
+			if (source <= _lowerHeightBound)
+				elevation = byte.MinValue;
+			else if (source >= _upperHeightBound)
+				elevation = byte.MaxValue;
+			else
+				elevation = (byte) ((source - _lowerHeightBound) / boundDiff * 255.0f);
+
+			_heightmap.SetValue(x, y, elevation);
+		}
+
+		#endregion
+	}
 }

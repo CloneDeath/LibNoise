@@ -1,71 +1,68 @@
-﻿namespace LibNoise.Writer
-{
-    using System;
-    using System.IO;
-    using LibNoise.Renderer;
+﻿using System;
+using System.IO;
+using LibNoise.Renderer;
 
+namespace LibNoise.Writer
+{
     /// <summary>
-    /// Heightmap writer class, raw format.
+    ///     Heightmap writer class, raw format.
     /// </summary>
     public class Heightmap8RawWriter : AbstractWriter
-    {
-        #region Fields
+	{
+		#region Fields
 
-        /// <summary>
-        /// The heightmap to write
-        /// </summary>
-        protected Heightmap8 _heightmap;
+	    /// <summary>
+	    ///     The heightmap to write
+	    /// </summary>
+	    protected Heightmap8 _heightmap;
 
-        #endregion
+		#endregion
 
-        #region Accessors
+		#region Accessors
 
-        /// <summary>
-        /// Gets or sets the heightmap to write
-        /// </summary>
-        public Heightmap8 Heightmap
-        {
-            get { return _heightmap; }
-            set { _heightmap = value; }
-        }
+	    /// <summary>
+	    ///     Gets or sets the heightmap to write
+	    /// </summary>
+	    public Heightmap8 Heightmap
+		{
+			get => _heightmap;
+			set => _heightmap = value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Ctor/Dtor
+		#region Interaction
 
-        #endregion
+	    /// <summary>
+	    ///     Writes the contents of the heightmap into the file.
+	    ///     @throw IOException An I/O exception occurred.
+	    ///     Possibly the file could not be written.
+	    /// </summary>
+	    /// <param name="heightmap"></param>
+	    public override void WriteFile()
+		{
+			if (_heightmap == null)
+				throw new ArgumentException("An heightmap must be provided");
 
-        #region Interaction
+			OpenFile();
 
-        /// <summary>
-        /// Writes the contents of the heightmap into the file.
-        /// 
-        /// @throw IOException An I/O exception occurred.
-        /// 
-        /// Possibly the file could not be written.
-        /// 
-        /// </summary>
-        /// <param name="heightmap"></param>
-        public override void WriteFile()
-        {
-            if (_heightmap == null)
-                throw new ArgumentException("An heightmap must be provided");
+			try
+			{
+				// ... Raw format ...
+				_writer.Write(_heightmap.Share());
+			}
+			catch (Exception e)
+			{
+				throw new IOException("Unknown IO exception", e);
+			}
 
-            OpenFile();
+			CloseFile();
+		}
 
-            try
-            {
-                // ... Raw format ...
-                _writer.Write(_heightmap.Share());
-            }
-            catch (Exception e)
-            {
-                throw new IOException("Unknown IO exception", e);
-            }
+		#endregion
 
-            CloseFile();
-        }
+		#region Ctor/Dtor
 
-        #endregion
-    }
+		#endregion
+	}
 }

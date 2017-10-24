@@ -1,53 +1,52 @@
 ﻿namespace LibNoise.Model
 {
     /// <summary>
-    /// Abstract base class for all Model
-    ///
-    /// Model must defined their own GetValue() method
+    ///     Abstract base class for all Model
+    ///     Model must defined their own GetValue() method
     /// </summary>
     public class AbstractModel
-    {
-        #region Fields
+	{
+		#region Fields
 
-        /// <summary>
-        /// The source input module.
-        /// </summary>
-        protected IModule PSourceModule;
+	    /// <summary>
+	    ///     The source input module.
+	    /// </summary>
+	    protected IModule PSourceModule;
 
-        #endregion
+		#endregion
 
-        #region Accessors
+		#region Accessors
 
-        /// <summary>
-        /// Gets or sets the source module.
-        /// </summary>
-        public IModule SourceModule
-        {
-            get { return PSourceModule; }
-            set { PSourceModule = value; }
-        }
+	    /// <summary>
+	    ///     Gets or sets the source module.
+	    /// </summary>
+	    public IModule SourceModule
+		{
+			get => PSourceModule;
+			set => PSourceModule = value;
+		}
 
-        #endregion
+		#endregion
 
-        #region Ctor/Dtor
+		#region Ctor/Dtor
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
-        public AbstractModel()
-        {
-        }
+	    /// <summary>
+	    ///     Default constructor
+	    /// </summary>
+	    public AbstractModel()
+		{
+		}
 
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="module">The noise module that is used to generate the output values</param>
-        public AbstractModel(IModule module)
-        {
-            PSourceModule = module;
-        }
+	    /// <summary>
+	    ///     Constructor
+	    /// </summary>
+	    /// <param name="module">The noise module that is used to generate the output values</param>
+	    public AbstractModel(IModule module)
+		{
+			PSourceModule = module;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
