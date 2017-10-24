@@ -37,7 +37,7 @@
         /// <summary>
         /// Converts an angle from degrees to radians.
         /// </summary>
-        public const float Deg2Rad = Pi/180.0f;
+        public const float Deg2Rad = (float)Math.PI/180.0f;
 
         /// <summary>
         /// Converts an angle from radians to degrees.
