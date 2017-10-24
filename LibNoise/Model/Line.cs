@@ -1,22 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Line.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Model that defines the displacement of a line segment.
-//   This model returns an output value from a noise module given the
-//   one-dimensional coordinate of an input value located on a line
-//   segment, which can be used as displacements.
-//   This class is useful for creating:
-//   - roads and rivers
-//   - disaffected college students
-//   To generate an output value, pass an input value between 0.0 and 1.0
-//   to the GetValue() method.  0.0 represents the start position of the
-//   line segment and 1.0 represents the end position of the line segment.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace LibNoise.Model
+﻿namespace LibNoise.Model
 {
     /// <summary>
     /// Model that defines the displacement of a line segment.
