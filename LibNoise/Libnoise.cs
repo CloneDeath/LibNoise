@@ -7,9 +7,7 @@ namespace LibNoise
     /// </summary>
     public static class Libnoise
 	{
-		#region Misc
-
-	    /// <summary>
+		/// <summary>
 	    ///     Converts latitude/longitude coordinates on a unit sphere into 3D Cartesian coordinates.
 	    /// </summary>
 	    /// <param name="lat">The latitude, in degrees. Must range from -90 to +90.</param>
@@ -17,7 +15,7 @@ namespace LibNoise
 	    /// <param name="x">By ref, this parameter contains the x coordinate.</param>
 	    /// <param name="y">By ref, this parameter contains the y coordinate.</param>
 	    /// <param name="z">By ref, this parameter contains the z coordinate.</param>
-	    public static void LatLonToXYZ(float lat, float lon, ref float x, ref float y, ref float z)
+	    public static void LatitudeLongitudeToXyz(float lat, float lon, ref float x, ref float y, ref float z)
 		{
 			var r = (float) Math.Cos(Deg2Rad * lat);
 			x = r * (float) Math.Cos(Deg2Rad * lon);
@@ -25,21 +23,7 @@ namespace LibNoise
 			z = r * (float) Math.Sin(Deg2Rad * lon);
 		}
 
-		#endregion
-
-		#region Constants
-
-	    /// <summary>
-	    ///     Version
-	    /// </summary>
-	    public const string Version = "1.0.0 B";
-
-	    /// <summary>
-	    ///     Pi
-	    /// </summary>
-	    public const float Pi = 3.1415926535897932385f;
-
-	    /// <summary>
+		/// <summary>
 	    ///     Square root of 2.
 	    /// </summary>
 	    public const float Sqrt2 = 1.4142135623730950488f;
@@ -64,11 +48,7 @@ namespace LibNoise
 	    /// </summary>
 	    public const float Rad2Deg = 1.0f / Deg2Rad;
 
-		#endregion
-
-		#region Interpolation methods
-
-	    /// <summary>
+		/// <summary>
 	    ///     Performs linear interpolation between two byte-values by a.
 	    ///     The amount value should range from 0.0 to 1.0.  If the amount value is
 	    ///     0.0, this function returns n0.  If the amount value is 1.0, this
@@ -155,11 +135,7 @@ namespace LibNoise
 			*/
 		}
 
-		#endregion
-
-		#region Variables utility
-
-	    /// <summary>
+		/// <summary>
 	    ///     Clamps a value onto a clamping range.
 	    ///     This function does not modify any parameters.
 	    /// </summary>
@@ -283,29 +259,6 @@ namespace LibNoise
 		}
 
 	    /// <summary>
-	    ///     Unpack the given float to an array of 4 bytes in big endian format.
-	    ///     If the length of the buffer is too smal, it wil be resized.
-	    /// </summary>
-	    /// <param name="value">The value.</param>
-	    /// <param name="buffer">The output buffer.</param>
-	    public static byte[] UnpackBigFloat(float value, ref byte[] buffer)
-		{
-			throw new NotImplementedException();
-			/*
-			if(buffer.Length < 4) {
-				Array.Resize<byte>(ref buffer, 4);
-			}
-			
-			buffer[0] = (byte)(value >> 24);
-			buffer[1] = (byte)(value >> 16);
-			buffer[2] = (byte)(value >> 8);
-			buffer[3] = (byte)(value);
-			
-			return buffer;
-			*/
-		}
-
-	    /// <summary>
 	    ///     Unpack the given short (int16) value to an array of 2 bytes in big endian format.
 	    ///     If the length of the buffer is too smal, it wil be resized.
 	    /// </summary>
@@ -357,49 +310,5 @@ namespace LibNoise
 
 			return buffer;
 		}
-
-	    /// <summary>
-	    ///     Unpack the given float (int32) to an array of 4 bytes  in little endian format.
-	    ///     If the length of the buffer is too smal, it wil be resized.
-	    /// </summary>
-	    /// <param name="value">The value.</param>
-	    /// <param name="buffer">The output buffer.</param>
-	    public static byte[] UnpackLittleFloat(float value, ref byte[] buffer)
-		{
-			throw new NotImplementedException();
-
-			/*
-			if(buffer.Length < 4) {
-				Array.Resize<byte>(ref buffer, 4);
-			}
-
-			buffer[0] = (byte)(value & 0x00ff);
-			buffer[1] = (byte)((value & 0xff00) >> 8);
-			buffer[2] = (byte)((value & 0x00ff0000) >> 16);
-			buffer[3] = (byte)((value & 0xff000000) >> 24);
-			
-			return buffer;
-*/
-		}
-
-	    /// <summary>
-	    ///     faster methid than using (int)Math.floor(x).
-	    /// </summary>
-	    /// <param name="x"></param>
-	    public static int FastFloor(double x)
-		{
-			return x >= 0 ? (int) x : (int) x - 1;
-		}
-
-	    /// <summary>
-	    ///     faster methid than using (int)Math.floor(x).
-	    /// </summary>
-	    /// <param name="x">The x.</param>
-	    public static int FastFloor(float x)
-		{
-			return x >= 0 ? (int) x : (int) x - 1;
-		}
-
-		#endregion
 	}
 }

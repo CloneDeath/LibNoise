@@ -10,8 +10,6 @@ namespace LibNoise.Builder
 	/// </summary>
 	public class NoiseMap : DataMap<float>, IMap2D<float>
 	{
-		#region Interaction
-
 		/// <summary>
 		///     Find the lowest and highest value in the map
 		/// </summary>
@@ -21,22 +19,17 @@ namespace LibNoise.Builder
 		{
 			min = max = 0f;
 			var data = Data;
-			if (data != null && data.Length > 0)
-			{
-				// First value, min and max for now
-				min = max = data[0];
+			if (data == null || data.Length <= 0) return;
+			
+			// First value, min and max for now
+			min = max = data[0];
 
-				for (var i = 1; i < data.Length; i++)
-					if (min > data[i])
-						min = data[i];
-					else if (max < data[i])
-						max = data[i];
-			}
+			for (var i = 1; i < data.Length; i++)
+				if (min > data[i])
+					min = data[i];
+				else if (max < data[i])
+					max = data[i];
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
 
 		/// <summary>
 		///     Create an empty NoiseMap.
@@ -81,10 +74,6 @@ namespace LibNoise.Builder
 			CopyFrom(copy);
 		}
 
-		#endregion
-
-		#region Internal
-
 		/// <summary>
 		///     Return the memory size of a float.
 		/// </summary>
@@ -111,7 +100,5 @@ namespace LibNoise.Builder
 		{
 			return float.MinValue;
 		}
-
-		#endregion
 	}
 }

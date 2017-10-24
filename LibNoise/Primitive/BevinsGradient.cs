@@ -19,8 +19,6 @@ namespace LibNoise.Primitive
     /// </summary>
     public sealed class BevinsGradient : PrimitiveModule, IModule3D
 	{
-		#region Constants
-
 		// These constants control certain parameters that all coherent-noise
 		// functions require.
 #if LIBNOISE_VERSION_2
@@ -46,10 +44,6 @@ namespace LibNoise.Primitive
         public const int ShiftNoiseGen = 13;
 
 #endif
-
-		#endregion
-
-		#region Fields
 
 		// A table of 256 random normalized vectors.  Each row is an (x, y, z, 0)
 		// coordinate.  The 0 is used as padding so we can use bit shifts to index
@@ -318,11 +312,7 @@ namespace LibNoise.Primitive
 			0.0337884f, -0.979891f, -0.196654f, 0.0f
 		};
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor
 	    /// </summary>
 	    public BevinsGradient()
@@ -341,27 +331,13 @@ namespace LibNoise.Primitive
 			Quality = quality;
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			return GradientCoherentNoise3D(x, y, z, Seed, Quality);
 		}
 
-		#endregion
-
-		#region GradientCoherentNoise3D
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates a gradient-coherent-noise value from the coordinates of a
 	    ///     three-dimensional input value.
 	    ///     The return value ranges from -1.0 to +1.0.
@@ -500,7 +476,5 @@ namespace LibNoise.Primitive
 			// so that this noise value ranges from -1.0 to 1.0.
 			return (xvGradient * xvPoint + yvGradient * yvPoint + zvGradient * zvPoint) * 2.12f;
 		}
-
-		#endregion
 	}
 }

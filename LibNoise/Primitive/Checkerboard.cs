@@ -9,15 +9,7 @@
     /// </summary>
     public class Checkerboard : PrimitiveModule, IModule3D
 	{
-		#region Interaction
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			// Fast floor
@@ -27,11 +19,5 @@
 
 			return ((ix & 1) ^ (iy & 1) ^ (iz & 1)) != 0 ? -1.0f : 1.0f;
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }

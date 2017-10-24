@@ -5,9 +5,7 @@
     /// </summary>
     public abstract class PrimitiveModule : IModule
 	{
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default noise seed for the noise module.
 	    /// </summary>
 	    public const int DefaultSeed = 0;
@@ -17,11 +15,7 @@
 	    /// </summary>
 	    public const NoiseQuality DefaultQuality = NoiseQuality.Standard;
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The quality of the Perlin noise.
 	    /// </summary>
 	    private NoiseQuality _quality = DefaultQuality;
@@ -31,11 +25,7 @@
 	    /// </summary>
 	    private int _seed = DefaultSeed;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the seed of the perlin noise.
 	    /// </summary>
 	    public virtual int Seed
@@ -53,11 +43,7 @@
 			set => _quality = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     A 0-args constructor
 	    /// </summary>
 	    protected PrimitiveModule()
@@ -84,7 +70,5 @@
 			_seed = seed;
 			_quality = quality;
 		}
-
-		#endregion
 	}
 }

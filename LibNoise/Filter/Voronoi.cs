@@ -31,30 +31,18 @@ namespace LibNoise.Filter
     /// </summary>
     public class Voronoi : FilterModule, IModule3D
 	{
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default persistence value for the Voronoi noise module.
 	    /// </summary>
 	    public const float DefaultDisplacement = 1.0f;
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			//TODO This method could be more efficient by caching the seed values.
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
 
 			var xInt = x > 0.0f ? (int) x : (int) x - 1;
 			var yInt = y > 0.0f ? (int) y : (int) y - 1;
@@ -74,9 +62,9 @@ namespace LibNoise.Filter
 			{
 				// Calculate the position and distance to the seed point inside of
 				// this unit cube.
-				var xPos = xCur + _source3D.GetValue(xCur, yCur, zCur);
-				var yPos = yCur + _source3D.GetValue(xCur, yCur, zCur);
-				var zPos = zCur + _source3D.GetValue(xCur, yCur, zCur);
+				var xPos = xCur + Primitive3D.GetValue(xCur, yCur, zCur);
+				var yPos = yCur + Primitive3D.GetValue(xCur, yCur, zCur);
+				var zPos = zCur + Primitive3D.GetValue(xCur, yCur, zCur);
 
 				var xDist = xPos - x;
 				var yDist = yPos - y;
@@ -110,21 +98,13 @@ namespace LibNoise.Filter
 			}
 
 			// Return the calculated distance with the displacement value applied.
-			return value + Displacement * _source3D.GetValue(
+			return value + Displacement * Primitive3D.GetValue(
 				       (int) Math.Floor(xCandidate),
 				       (int) Math.Floor(yCandidate),
 				       (int) Math.Floor(zCandidate));
 		}
 
-		#endregion
-
-		#region Fields
-
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     This noise module assigns each Voronoi cell with a random constant
 	    ///     value from a coherent-noise function.  The
 	    ///     <i>
@@ -142,11 +122,5 @@ namespace LibNoise.Filter
 	    ///     the further away that point is from the nearest seed point.
 	    /// </summary>
 	    public bool Distance { get; set; }
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }

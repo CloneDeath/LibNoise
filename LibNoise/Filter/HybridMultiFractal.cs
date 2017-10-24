@@ -23,25 +23,17 @@ namespace LibNoise.Filter
     /// </summary>
     public class HybridMultiFractal : FilterModule, IModule3D, IModule2D
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor
 	    /// </summary>
 	    public HybridMultiFractal()
 		{
-			_gain = 1.0f;
-			_offset = 0.7f;
-			_spectralExponent = 0.25f;
-
-			ComputeSpectralWeights();
+			Gain = 1.0f;
+			Offset = 0.7f;
+			SpectralExponent = 0.25f;
 		}
 
-		#endregion
-
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -52,25 +44,25 @@ namespace LibNoise.Filter
 			float signal;
 			int curOctave;
 
-			x *= _frequency;
-			y *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
 
 			// Initialize value : get first octave of function; later octaves are weighted
-			var value = _source2D.GetValue(x, y) + _offset;
-			var weight = _gain * value;
+			var value = Primitive2D.GetValue(x, y) + Offset;
+			var weight = Gain * value;
 
-			x *= _lacunarity;
-			y *= _lacunarity;
+			x *= Lacunarity;
+			y *= Lacunarity;
 
 			// inner loop of spectral construction, where the fractal is built
-			for (curOctave = 1; weight > 0.001 && curOctave < _octaveCount; curOctave++)
+			for (curOctave = 1; weight > 0.001 && curOctave < OctaveCount; curOctave++)
 			{
 				// prevent divergence
 				if (weight > 1.0)
 					weight = 1.0f;
 
 				// get next higher frequency
-				signal = (_offset + _source2D.GetValue(x, y)) * _spectralWeights[curOctave];
+				signal = (Offset + Primitive2D.GetValue(x, y)) * SpectralWeights[curOctave];
 
 				// The weighting from the previous octave is applied to the signal.
 				signal *= weight;
@@ -79,20 +71,20 @@ namespace LibNoise.Filter
 				value += signal;
 
 				// update the (monotonically decreasing) weighting value
-				weight *= _gain * signal;
+				weight *= Gain * signal;
 
 				// Go to the next octave.
-				x *= _lacunarity;
-				y *= _lacunarity;
+				x *= Lacunarity;
+				y *= Lacunarity;
 			}
 
-			//take care of remainder in _octaveCount
-			var remainder = _octaveCount - (int) _octaveCount;
+			//take care of remainder in OctaveCount
+			var remainder = OctaveCount - (int) OctaveCount;
 
 			if (remainder > 0.0f)
 			{
-				signal = _source2D.GetValue(x, y);
-				signal *= _spectralWeights[curOctave];
+				signal = Primitive2D.GetValue(x, y);
+				signal *= SpectralWeights[curOctave];
 				signal *= remainder;
 				value += signal;
 			}
@@ -100,43 +92,33 @@ namespace LibNoise.Filter
 			return value;
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			float signal;
 			int curOctave;
 
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
 
 			// Initialize value : get first octave of function; later octaves are weighted
-			var value = _source3D.GetValue(x, y, z) + _offset;
-			var weight = _gain * value;
+			var value = Primitive3D.GetValue(x, y, z) + Offset;
+			var weight = Gain * value;
 
-			x *= _lacunarity;
-			y *= _lacunarity;
-			z *= _lacunarity;
+			x *= Lacunarity;
+			y *= Lacunarity;
+			z *= Lacunarity;
 
 			// inner loop of spectral construction, where the fractal is built
-			for (curOctave = 1; weight > 0.001 && curOctave < _octaveCount; curOctave++)
+			for (curOctave = 1; weight > 0.001 && curOctave < OctaveCount; curOctave++)
 			{
 				// prevent divergence
 				if (weight > 1.0)
 					weight = 1.0f;
 
 				// get next higher frequency
-				signal = (_offset + _source3D.GetValue(x, y, z)) * _spectralWeights[curOctave];
+				signal = (Offset + Primitive3D.GetValue(x, y, z)) * SpectralWeights[curOctave];
 
 				// The weighting from the previous octave is applied to the signal.
 				signal *= weight;
@@ -145,28 +127,26 @@ namespace LibNoise.Filter
 				value += signal;
 
 				// update the (monotonically decreasing) weighting value
-				weight *= _gain * signal;
+				weight *= Gain * signal;
 
 				// Go to the next octave.
-				x *= _lacunarity;
-				y *= _lacunarity;
-				z *= _lacunarity;
+				x *= Lacunarity;
+				y *= Lacunarity;
+				z *= Lacunarity;
 			}
 
-			//take care of remainder in _octaveCount
-			var remainder = _octaveCount - (int) _octaveCount;
+			//take care of remainder in OctaveCount
+			var remainder = OctaveCount - (int) OctaveCount;
 
 			if (remainder > 0.0f)
 			{
-				signal = _source3D.GetValue(x, y, z);
-				signal *= _spectralWeights[curOctave];
+				signal = Primitive3D.GetValue(x, y, z);
+				signal *= SpectralWeights[curOctave];
 				signal *= remainder;
 				value += signal;
 			}
 
 			return value;
 		}
-
-		#endregion
 	}
 }

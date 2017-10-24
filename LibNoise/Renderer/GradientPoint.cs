@@ -13,9 +13,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public struct GradientPoint : IEquatable<GradientPoint>
 	{
-		#region fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     Internal hashcode
 	    /// </summary>
 	    private readonly int _hashcode;
@@ -30,10 +28,6 @@ namespace LibNoise.Renderer
 	    /// </summary>
 	    public float Position;
 
-		#endregion
-
-		#region Ctor/Dtor
-
 		public GradientPoint(float position, IColor color)
 		{
 			Color = color;
@@ -41,27 +35,17 @@ namespace LibNoise.Renderer
 			_hashcode = (int) Position ^ Color.GetHashCode();
 		}
 
-		#endregion
-
-		#region Interface implementation
-
 		public bool Equals(GradientPoint other)
 		{
 			return Position == other.Position;
 		}
 
-		#endregion
-
-		#region Overloading
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    /// <returns></returns>
 	    public override int GetHashCode()
 		{
 			return _hashcode;
 		}
-
-		#endregion
 	}
 }

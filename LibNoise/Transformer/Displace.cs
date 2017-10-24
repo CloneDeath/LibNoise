@@ -21,15 +21,7 @@
     /// </summary>
     public class Displace : TransformerModule, IModule3D
 	{
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			// Get the output values from the three displacement modules.  Add each
@@ -43,11 +35,7 @@
 			return ((IModule3D) _sourceModule).GetValue(xDisplace, yDisplace, zDisplace);
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The source input module
 	    /// </summary>
 	    protected IModule _sourceModule;
@@ -67,11 +55,7 @@
 	    /// </summary>
 	    protected IModule _zDisplaceModule;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the source module
 	    /// </summary>
 	    public IModule SourceModule
@@ -107,11 +91,7 @@
 			set => _zDisplaceModule = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create a new noise module with default values
 	    /// </summary>
 	    public Displace()
@@ -133,7 +113,5 @@
 			_yDisplaceModule = yDisplaceModule;
 			_zDisplaceModule = zDisplaceModule;
 		}
-
-		#endregion
 	}
 }

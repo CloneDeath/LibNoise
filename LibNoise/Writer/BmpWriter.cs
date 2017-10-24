@@ -13,44 +13,20 @@ namespace LibNoise.Writer
     ///     - Pass the filename to the Filename property.
     ///     - Pass an Image object to the Image property.
     ///     - Call the WriteFile().
-    ///     TODO convert BMPWriter to an extensible writing strategy based on image format (bmp, png, jpg, ...)
     /// </summary>
-    public class BMPWriter : AbstractWriter
+    public class BmpWriter : AbstractWriter
 	{
-		#region constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Bitmap header size.
 	    /// </summary>
-	    public const int BMP_HEADER_SIZE = 54;
+	    public const int BmpHeaderSize = 54;
 
-		#endregion
+		/// <summary>
+		///     The destination image
+		/// </summary>
+	    public Image Image { get; set; }
 
-		#region Fields
-
-	    /// <summary>
-	    ///     The destination image
-	    /// </summary>
-	    protected Image _image;
-
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
-	    ///     Gets or sets the destination image
-	    /// </summary>
-	    public Image Image
-		{
-			get => _image;
-			set => _image = value;
-		}
-
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Writes the contents of the image object to the file.
 	    ///     @pre Filename has been previously defined.
 	    ///     @pre Image has been previously defined.
@@ -60,11 +36,11 @@ namespace LibNoise.Writer
 	    /// </summary>
 	    public override void WriteFile()
 		{
-			if (_image == null)
+			if (Image == null)
 				throw new ArgumentException("An image map must be provided");
 
-			var width = _image.Width;
-			var height = _image.Height;
+			var width = Image.Width;
+			var height = Image.Height;
 
 			// The width of one line in the file must be aligned on a 4-byte boundary.
 			var bufferSize = CalcWidthByteCount(width);
@@ -89,11 +65,11 @@ namespace LibNoise.Writer
 			try
 			{
 				_writer.Write(b2); //BM Magic number 424D 
-				_writer.Write(Libnoise.UnpackLittleUint32(destSize + BMP_HEADER_SIZE, ref b4));
+				_writer.Write(Libnoise.UnpackLittleUint32(destSize + BmpHeaderSize, ref b4));
 
 				_writer.Write(Libnoise.UnpackLittleUint32(0, ref b4));
 
-				_writer.Write(Libnoise.UnpackLittleUint32(BMP_HEADER_SIZE, ref b4));
+				_writer.Write(Libnoise.UnpackLittleUint32(BmpHeaderSize, ref b4));
 				_writer.Write(Libnoise.UnpackLittleUint32(40, ref b4)); // Palette offset
 				_writer.Write(Libnoise.UnpackLittleUint32(width, ref b4)); // width
 				_writer.Write(Libnoise.UnpackLittleUint32(height, ref b4)); // height
@@ -121,7 +97,7 @@ namespace LibNoise.Writer
 
 					for (var x = 0; x < width; x++)
 					{
-						pSource = _image.GetValue(x, y);
+						pSource = Image.GetValue(x, y);
 
 						// Little endian order : B G R
 						pLineBuffer[i++] = pSource.Blue;
@@ -140,11 +116,7 @@ namespace LibNoise.Writer
 			CloseFile();
 		}
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Calculates the width of one horizontal line in the file, in bytes.
 	    ///     Windows bitmap files require that the width of one horizontal line
 	    ///     must be aligned to a 32-bit boundary.
@@ -155,11 +127,5 @@ namespace LibNoise.Writer
 		{
 			return (width * 3 + 3) & ~0x03;
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }

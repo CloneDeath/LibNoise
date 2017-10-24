@@ -7,9 +7,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public class Heightmap8 : DataMap<byte>, IMap2D<byte>
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Find the lowest and highest value in the map.
 	    /// </summary>
 	    /// <param name="min">The lowest value.</param>
@@ -32,11 +30,7 @@ namespace LibNoise.Renderer
 			}
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor.
 	    /// </summary>
 	    public Heightmap8()
@@ -67,11 +61,7 @@ namespace LibNoise.Renderer
 			CopyFrom(copy);
 		}
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Return the memory size of a unsigned byte.
 	    /// </summary>
 	    /// <returns>The memory size of a unsigned byte.</returns>
@@ -97,7 +87,5 @@ namespace LibNoise.Renderer
 		{
 			return byte.MinValue;
 		}
-
-		#endregion
 	}
 }

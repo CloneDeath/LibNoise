@@ -20,15 +20,7 @@
     /// </summary>
     public class Blend : SelectorModule, IModule3D
 	{
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			var v0 = ((IModule3D) _leftModule).GetValue(x, y, z);
@@ -37,11 +29,7 @@
 			return Libnoise.Lerp(v0, v1, alpha);
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The control module
 	    /// </summary>
 	    protected IModule _controlModule;
@@ -56,11 +44,7 @@
 	    /// </summary>
 	    protected IModule _rightModule;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the left module
 	    /// </summary>
 	    public IModule LeftModule
@@ -87,10 +71,6 @@
 			set => _controlModule = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
 		public Blend()
 		{
 		}
@@ -102,7 +82,5 @@
 			_leftModule = leftModule;
 			_rightModule = rightModule;
 		}
-
-		#endregion
 	}
 }

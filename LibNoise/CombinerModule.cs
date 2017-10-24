@@ -4,55 +4,24 @@
     /// </summary>
     public abstract class CombinerModule : IModule
 	{
-		#region Fields
-
-	    /// <summary>
-	    ///     The left input module
-	    /// </summary>
-	    protected IModule _leftModule;
-
-	    /// <summary>
-	    ///     The right input module
-	    /// </summary>
-	    protected IModule _rightModule;
-
-		#endregion
-
-		#region Accessors
-
 	    /// <summary>
 	    ///     Gets or sets the left module
 	    /// </summary>
-	    public IModule LeftModule
-		{
-			get => _leftModule;
-			set => _leftModule = value;
-		}
+	    public IModule LeftModule { get; set; }
 
 	    /// <summary>
 	    ///     Gets or sets the right module
 	    /// </summary>
-	    public IModule RightModule
-		{
-			get => _rightModule;
-			set => _rightModule = value;
-		}
+	    public IModule RightModule { get; set; }
 
-		#endregion
-
-		#region Ctor/Dtor
-
-		public CombinerModule()
+		protected CombinerModule()
 		{
 		}
 
-
-		public CombinerModule(IModule left, IModule right)
+		protected CombinerModule(IModule left, IModule right)
 		{
-			_leftModule = left;
-			_rightModule = right;
+			LeftModule = left;
+			RightModule = right;
 		}
-
-		#endregion
 	}
 }

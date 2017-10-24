@@ -6,16 +6,12 @@
     /// </summary>
     public interface IModule2D : IModule
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
 	    /// <param name="y">The input coordinate on the y-axis.</param>
 	    /// <returns>The resulting output value.</returns>
 	    float GetValue(float x, float y);
-
-		#endregion
 	}
 }

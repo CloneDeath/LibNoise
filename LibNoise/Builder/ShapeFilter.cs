@@ -7,18 +7,12 @@ namespace LibNoise.Builder
     /// </summary>
     public class ShapeFilter : IBuilderFilter
 	{
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default value.
 	    /// </summary>
 	    public const float DefaultValue = -0.5f;
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Get greyscale level.
 	    /// </summary>
 	    /// <param name="x">X.</param>
@@ -33,11 +27,7 @@ namespace LibNoise.Builder
 			return Cache.Level;
 		}
 
-		#endregion
-
-		#region Nested type: LevelCache
-
-	    /// <summary>
+		/// <summary>
 	    ///     A simple 2d-coordinates struct used as a cached value
 	    /// </summary>
 	    protected struct LevelCache
@@ -90,11 +80,7 @@ namespace LibNoise.Builder
 			}
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    protected LevelCache Cache = new LevelCache(-1, -1, 0);
 
@@ -107,11 +93,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    protected IMap2D<IColor> PShape;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the shape image
 	    /// </summary>
 	    public IMap2D<IColor> Shape
@@ -129,15 +111,7 @@ namespace LibNoise.Builder
 			set => Constant = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Return the filter level at this position
 	    /// </summary>
 	    /// <param name="x"></param>
@@ -176,7 +150,5 @@ namespace LibNoise.Builder
 				level / 255.0f
 			);
 		}
-
-		#endregion
 	}
 }

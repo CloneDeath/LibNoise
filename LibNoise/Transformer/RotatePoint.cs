@@ -17,15 +17,7 @@ namespace LibNoise.Transformer
     /// </summary>
     public class RotatePoint : TransformerModule, IModule3D
 	{
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			var nx = _x1Matrix * x + _y1Matrix * y + _z1Matrix * z;
@@ -35,11 +27,7 @@ namespace LibNoise.Transformer
 			return ((IModule3D) _sourceModule).GetValue(nx, ny, nz);
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Sets the rotation angles around all three axes to apply to the
 	    ///     input value.
 	    /// </summary>
@@ -74,11 +62,7 @@ namespace LibNoise.Transformer
 			_zAngle = zAngle;
 		}
 
-		#endregion
-
-		#region Connstant
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default x rotation angle for the RotatePoint noise module.
 	    /// </summary>
 	    public const float DefaultRotateX = 0.0f;
@@ -93,11 +77,7 @@ namespace LibNoise.Transformer
 	    /// </summary>
 	    public const float DefaultRotateZ = 0.0f;
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The source input module
 	    /// </summary>
 	    private IModule _sourceModule;
@@ -171,11 +151,7 @@ namespace LibNoise.Transformer
 	    /// </summary>
 	    private float _zAngle;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the source module
 	    /// </summary>
 	    public IModule SourceModule
@@ -211,11 +187,7 @@ namespace LibNoise.Transformer
 			set => SetAngles(_xAngle, _yAngle, value);
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create a new noise module with default values
 	    /// </summary>
 	    public RotatePoint()
@@ -243,7 +215,5 @@ namespace LibNoise.Transformer
 			_sourceModule = source;
 			SetAngles(xAngle, yAngle, zAngle);
 		}
-
-		#endregion
 	}
 }

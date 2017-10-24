@@ -9,18 +9,12 @@ namespace LibNoise.Writer
     /// </summary>
     public class Heightmap8RawWriter : AbstractWriter
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The heightmap to write
 	    /// </summary>
 	    protected Heightmap8 _heightmap;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the heightmap to write
 	    /// </summary>
 	    public Heightmap8 Heightmap
@@ -29,11 +23,7 @@ namespace LibNoise.Writer
 			set => _heightmap = value;
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Writes the contents of the heightmap into the file.
 	    ///     @throw IOException An I/O exception occurred.
 	    ///     Possibly the file could not be written.
@@ -58,11 +48,5 @@ namespace LibNoise.Writer
 
 			CloseFile();
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }

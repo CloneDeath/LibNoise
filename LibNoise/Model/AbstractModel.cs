@@ -6,18 +6,12 @@
     /// </summary>
     public class AbstractModel
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The source input module.
 	    /// </summary>
 	    protected IModule PSourceModule;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the source module.
 	    /// </summary>
 	    public IModule SourceModule
@@ -26,11 +20,7 @@
 			set => PSourceModule = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public AbstractModel()
@@ -46,7 +36,5 @@
 		{
 			PSourceModule = module;
 		}
-
-		#endregion
 	}
 }

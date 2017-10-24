@@ -6,18 +6,14 @@
     /// </summary>
     public interface IModule4D : IModule
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
 	    /// <param name="y">The input coordinate on the y-axis.</param>
 	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <param name="z">The input coordinate on the t-axis.</param>
+	    /// <param name="t">The input coordinate on the t-axis.</param>
 	    /// <returns>The resulting output value.</returns>
 	    float GetValue(float x, float y, float z, float t);
-
-		#endregion
 	}
 }

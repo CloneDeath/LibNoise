@@ -20,51 +20,17 @@ namespace LibNoise.Primitive
     /// </summary>
     public class Spheres : PrimitiveModule, IModule3D
 	{
-		#region Constants
+		/// <summary>
+		///     Frequency of the concentric cylinders.
+		/// </summary>
+	    public float Frequency { get; set; }
 
-	    /// <summary>
-	    ///     Frequency of the concentric spheres.
-	    /// </summary>
-	    public const float DEFAULT_FREQUENCY = 1.0f;
-
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
-	    ///     Frequency of the concentric cylinders.
-	    /// </summary>
-	    protected float _frequency = DEFAULT_FREQUENCY;
-
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
-	    ///     Gets or sets the frequency
-	    /// </summary>
-	    public float Frequency
-		{
-			get => _frequency;
-			set => _frequency = value;
-		}
-
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
 
 			var distFromCenter = (float) Math.Sqrt(x * x + y * y + z * z);
 			var distFromSmallerSphere = distFromCenter - (float) Math.Floor(distFromCenter);
@@ -73,15 +39,11 @@ namespace LibNoise.Primitive
 			return 1.0f - nearestDist * 4.0f; // Puts it in the -1.0 to +1.0 range.
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create new Spheres generator with default values
 	    /// </summary>
 	    public Spheres()
-			: this(DEFAULT_FREQUENCY)
+			: this(1.0f)
 		{
 		}
 
@@ -92,9 +54,7 @@ namespace LibNoise.Primitive
 	    /// <param name="frequency"></param>
 	    public Spheres(float frequency)
 		{
-			_frequency = frequency;
+			Frequency = frequency;
 		}
-
-		#endregion
 	}
 }

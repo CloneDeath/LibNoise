@@ -17,17 +17,11 @@ namespace LibNoise.Primitive
     /// </summary>
     public class ImprovedPerlin : PrimitiveModule, IModule3D, IModule2D, IModule1D
 	{
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    private const int RandomSize = 256;
 
-		#endregion
-
-		#region IModule1D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -38,7 +32,7 @@ namespace LibNoise.Primitive
 			var xf = x > 0.0 ? (int) x : (int) x - 1;
 
 			// Compute the cell coordinates
-			var X = xf & 255;
+			var cellX = xf & 255;
 
 			// Retrieve the decimal part of the cell
 			x -= xf;
@@ -61,14 +55,10 @@ namespace LibNoise.Primitive
 					break;
 			}
 
-			return Libnoise.Lerp(Grad(_random[X], x), Grad(_random[X + 1], x - 1), u);
+			return Libnoise.Lerp(Grad(_random[cellX], x), Grad(_random[cellX + 1], x - 1), u);
 		}
 
-		#endregion
-
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -81,8 +71,8 @@ namespace LibNoise.Primitive
 			var yf = y > 0.0 ? (int) y : (int) y - 1;
 
 			// Compute the cell coordinates
-			var X = xf & 255;
-			var Y = yf & 255;
+			var cellX = xf & 255;
+			var cellY = yf & 255;
 
 			// Retrieve the decimal part of the cell
 			x -= xf;
@@ -110,36 +100,26 @@ namespace LibNoise.Primitive
 			}
 
 			// Fetch some randoms values from the table
-			var A = _random[X] + Y;
-			var B = _random[X + 1] + Y;
+			var cellA = _random[cellX] + cellY;
+			var cellB = _random[cellX + 1] + cellY;
 
 			// Interpolate between directions 
 			return Libnoise.Lerp(
 				Libnoise.Lerp(
-					Grad(_random[A], x, y),
-					Grad(_random[B], x - 1, y),
+					Grad(_random[cellA], x, y),
+					Grad(_random[cellB], x - 1, y),
 					u
 				),
 				Libnoise.Lerp(
-					Grad(_random[A + 1], x, y - 1),
-					Grad(_random[B + 1], x - 1, y - 1),
+					Grad(_random[cellA + 1], x, y - 1),
+					Grad(_random[cellB + 1], x - 1, y - 1),
 					u
 				),
 				v
 			);
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			// Fast floor
@@ -149,9 +129,9 @@ namespace LibNoise.Primitive
 
 			// Compute the cell coordinates
 			// Find unit cube that contains the point
-			var X = xf & 255;
-			var Y = yf & 255;
-			var Z = zf & 255;
+			var cellX = xf & 255;
+			var cellY = yf & 255;
+			var cellZ = zf & 255;
 
 			// Retrieve the decimal part of the cell = relative X,Y,Z of point in cube
 			x -= xf;
@@ -184,12 +164,12 @@ namespace LibNoise.Primitive
 
 			// Hash coordinates of the 8 cubes corners
 			// Fetch some randoms values from the table
-			var a = _random[X] + Y;
-			var aa = _random[a] + Z;
-			var ab = _random[a + 1] + Z;
-			var b = _random[X + 1] + Y;
-			var ba = _random[b] + Z;
-			var bb = _random[b + 1] + Z;
+			var a = _random[cellX] + cellY;
+			var aa = _random[a] + cellZ;
+			var ab = _random[a + 1] + cellZ;
+			var b = _random[cellX + 1] + cellY;
+			var ba = _random[b] + cellZ;
+			var bb = _random[b + 1] + cellZ;
 
 			// Interpolate between directions
 			return
@@ -224,11 +204,7 @@ namespace LibNoise.Primitive
 				);
 		}
 
-		#endregion
-
-		#region Utils
-
-	    /// <summary>
+		/// <summary>
 	    ///     Initializes the random values
 	    /// </summary>
 	    /// <param name="seed">The seed used to generate the random values</param>
@@ -241,22 +217,15 @@ namespace LibNoise.Primitive
 				// Shuffle the array using the given seed
 				// Unpack the seed into 4 bytes then perform a bitwise XOR operation
 				// with each byte
-				var F = new byte[4];
-				Libnoise.UnpackLittleUint32(seed, ref F);
+				var f = new byte[4];
+				Libnoise.UnpackLittleUint32(seed, ref f);
 
 				for (var i = 0; i < Source.Length; i++)
 				{
-					/*
-					_random[i] =  (F[0] > 0) ? _source[i] ^ F[0] : _source[i];
-					_random[i] =  (F[1] > 0) ? _source[i] ^ F[1] : _random[i];
-					_random[i] =  (F[2] > 0) ? _source[i] ^ F[2] : _random[i];
-					_random[i] =  (F[3] > 0) ? _source[i] ^ F[3] : _random[i];
-					*/
-
-					_random[i] = Source[i] ^ F[0];
-					_random[i] ^= F[1];
-					_random[i] ^= F[2];
-					_random[i] ^= F[3];
+					_random[i] = Source[i] ^ f[0];
+					_random[i] ^= f[1];
+					_random[i] ^= f[2];
+					_random[i] ^= f[3];
 
 					_random[i + RandomSize] = _random[i];
 				}
@@ -282,9 +251,7 @@ namespace LibNoise.Primitive
 			}
 		}
 
-		#endregion
-
-	    /// <summary>
+		/// <summary>
 	    ///     Modifies the result by adding a directional bias
 	    /// </summary>
 	    /// <param name="hash">The random value telling in which direction the bias will occur</param>
@@ -448,9 +415,7 @@ namespace LibNoise.Primitive
 			return (hash & 1) == 0 ? x : -x;
 		}
 
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     Initial permutation table
 	    /// </summary>
 	    private static readonly int[] Source =
@@ -474,11 +439,7 @@ namespace LibNoise.Primitive
 	    /// </summary>
 	    private int[] _random;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the seed of the perlin noise.
 	    /// </summary>
 	    public override int Seed
@@ -500,11 +461,7 @@ namespace LibNoise.Primitive
 			set => _random = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor
 	    /// </summary>
 	    public ImprovedPerlin()
@@ -521,7 +478,5 @@ namespace LibNoise.Primitive
 		{
 			Randomize(Seed);
 		}
-
-		#endregion
 	}
 }

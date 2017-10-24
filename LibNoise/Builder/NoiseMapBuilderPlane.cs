@@ -17,9 +17,7 @@ namespace LibNoise.Builder
     /// </summary>
     public class NoiseMapBuilderPlane : NoiseMapBuilder
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     Lower x boundary of the planar noise map, in units.
 	    /// </summary>
 	    private float _lowerXBound;
@@ -44,11 +42,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    private float _upperZBound;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets a flag specifying whether seamless tiling is enabled.
 	    /// </summary>
 	    public bool Seamless
@@ -77,11 +71,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    public float UpperZBound => _upperZBound;
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public NoiseMapBuilderPlane()
@@ -109,11 +99,7 @@ namespace LibNoise.Builder
 			SetBounds(lowerXBound, upperXBound, lowerZBound, upperZBound);
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Sets the boundaries of the planar noise map.
 	    ///     @pre The lower x boundary is less than the upper x boundary.
 	    ///     @pre The lower z boundary is less than the upper z boundary.
@@ -178,25 +164,24 @@ namespace LibNoise.Builder
 			var zExtent = _upperZBound - _lowerZBound;
 			var xDelta = xExtent / PWidth;
 			var zDelta = zExtent / PHeight;
-			var xCur = _lowerXBound;
 			var zCur = _lowerZBound;
 
 			// Fill every point in the noise map with the output values from the model.
 			for (var z = 0; z < PHeight; z++)
 			{
-				xCur = _lowerXBound;
+				var xCur = _lowerXBound;
 
 				for (var x = 0; x < PWidth; x++)
 				{
 					float finalValue;
 					var level = FilterLevel.Source;
 
-					if (PFilter != null)
-						level = PFilter.IsFiltered(x, z);
+					if (Filter != null)
+						level = Filter.IsFiltered(x, z);
 
-					if (level == FilterLevel.Constant)
+					if (level == FilterLevel.Constant && Filter != null)
 					{
-						finalValue = PFilter.ConstantValue;
+						finalValue = Filter.ConstantValue;
 					}
 					else
 					{
@@ -220,8 +205,8 @@ namespace LibNoise.Builder
 							finalValue = model.GetValue(xCur, zCur);
 						}
 
-						if (level == FilterLevel.Filter && PFilter != null)
-							finalValue = PFilter.FilterValue(x, z, finalValue);
+						if (level == FilterLevel.Filter && Filter != null)
+							finalValue = Filter.FilterValue(x, z, finalValue);
 					}
 
 					PNoiseMap.SetValue(x, z, finalValue);
@@ -235,7 +220,5 @@ namespace LibNoise.Builder
 					PCallBack(z);
 			}
 		}
-
-		#endregion
 	}
 }

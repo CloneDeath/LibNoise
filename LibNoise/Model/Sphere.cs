@@ -14,9 +14,7 @@
     /// </summary>
     public class Sphere : AbstractModel
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Returns the output value from the noise module given the
 	    ///     (latitude, longitude) coordinates of the specified input value
 	    ///     located on the surface of the sphere.
@@ -31,15 +29,11 @@
 	    public float GetValue(float lat, float lon)
 		{
 			float x = 0.0f, y = 0.0f, z = 0.0f;
-			Libnoise.LatLonToXYZ(lat, lon, ref x, ref y, ref z);
+			Libnoise.LatitudeLongitudeToXyz(lat, lon, ref x, ref y, ref z);
 			return ((IModule3D) PSourceModule).GetValue(x, y, z);
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public Sphere()
@@ -55,11 +49,5 @@
 			: base(module)
 		{
 		}
-
-		#endregion
-
-		#region Internal
-
-		#endregion
 	}
 }

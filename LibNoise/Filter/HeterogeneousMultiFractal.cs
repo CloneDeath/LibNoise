@@ -16,9 +16,7 @@ namespace LibNoise.Filter
     /// </summary>
     public class HeterogeneousMultiFractal : FilterModule, IModule3D, IModule2D
 	{
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -29,23 +27,23 @@ namespace LibNoise.Filter
 			float signal;
 			int curOctave;
 
-			x *= _frequency;
-			y *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
 
 			// Initialize value : first unscaled octave of function; later octaves are scaled 
-			var value = _offset + _source2D.GetValue(x, y);
+			var value = Offset + Primitive2D.GetValue(x, y);
 
-			x *= _lacunarity;
-			y *= _lacunarity;
+			x *= Lacunarity;
+			y *= Lacunarity;
 
 			// inner loop of spectral construction, where the fractal is built
-			for (curOctave = 1; curOctave < _octaveCount; curOctave++)
+			for (curOctave = 1; curOctave < OctaveCount; curOctave++)
 			{
 				// obtain displaced noise value.
-				signal = _offset + _source2D.GetValue(x, y);
+				signal = Offset + Primitive2D.GetValue(x, y);
 
 				//scale amplitude appropriately for this frequency 
-				signal *= _spectralWeights[curOctave];
+				signal *= SpectralWeights[curOctave];
 
 				// scale increment by current altitude of function
 				signal *= value;
@@ -54,17 +52,17 @@ namespace LibNoise.Filter
 				value += signal;
 
 				// Go to the next octave.
-				x *= _lacunarity;
-				y *= _lacunarity;
+				x *= Lacunarity;
+				y *= Lacunarity;
 			}
 
-			//take care of remainder in _octaveCount
-			var remainder = _octaveCount - (int) _octaveCount;
+			//take care of remainder in OctaveCount
+			var remainder = OctaveCount - (int) OctaveCount;
 
 			if (remainder > 0.0f)
 			{
-				signal = _offset + _source2D.GetValue(x, y);
-				signal *= _spectralWeights[curOctave];
+				signal = Offset + Primitive2D.GetValue(x, y);
+				signal *= SpectralWeights[curOctave];
 				signal *= value;
 				signal *= remainder;
 				value += signal;
@@ -73,41 +71,31 @@ namespace LibNoise.Filter
 			return value;
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			float signal;
 			int curOctave;
 
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
 
 			// Initialize value : first unscaled octave of function; later octaves are scaled 
-			var value = _offset + _source3D.GetValue(x, y, z);
+			var value = Offset + Primitive3D.GetValue(x, y, z);
 
-			x *= _lacunarity;
-			y *= _lacunarity;
-			z *= _lacunarity;
+			x *= Lacunarity;
+			y *= Lacunarity;
+			z *= Lacunarity;
 
 			// inner loop of spectral construction, where the fractal is built
-			for (curOctave = 1; curOctave < _octaveCount; curOctave++)
+			for (curOctave = 1; curOctave < OctaveCount; curOctave++)
 			{
 				// obtain displaced noise value.
-				signal = _offset + _source3D.GetValue(x, y, z);
+				signal = Offset + Primitive3D.GetValue(x, y, z);
 
 				//scale amplitude appropriately for this frequency 
-				signal *= _spectralWeights[curOctave];
+				signal *= SpectralWeights[curOctave];
 
 				// scale increment by current altitude of function
 				signal *= value;
@@ -116,18 +104,18 @@ namespace LibNoise.Filter
 				value += signal;
 
 				// Go to the next octave.
-				x *= _lacunarity;
-				y *= _lacunarity;
-				z *= _lacunarity;
+				x *= Lacunarity;
+				y *= Lacunarity;
+				z *= Lacunarity;
 			}
 
-			//take care of remainder in _octaveCount
-			var remainder = _octaveCount - (int) _octaveCount;
+			//take care of remainder in OctaveCount
+			var remainder = OctaveCount - (int) OctaveCount;
 
 			if (remainder > 0.0f)
 			{
-				signal = _offset + _source3D.GetValue(x, y, z);
-				signal *= _spectralWeights[curOctave];
+				signal = Offset + Primitive3D.GetValue(x, y, z);
+				signal *= SpectralWeights[curOctave];
 				signal *= value;
 				signal *= remainder;
 				value += signal;
@@ -135,11 +123,5 @@ namespace LibNoise.Filter
 
 			return value;
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }

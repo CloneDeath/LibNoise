@@ -73,9 +73,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public class ImageRenderer : AbstractImageRenderer
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public ImageRenderer()
@@ -91,11 +89,7 @@ namespace LibNoise.Renderer
 			_recalcLightValues = true;
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Renders the destination image using the contents of the source
 	    ///     noise map and an optional background image.
 	    ///     @pre NoiseMap has been defined.
@@ -278,11 +272,7 @@ namespace LibNoise.Renderer
 			}
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     A flag specifying whether wrapping is enabled.
 	    /// </summary>
 	    private bool _wrapEnabled;
@@ -361,11 +351,7 @@ namespace LibNoise.Renderer
 	    /// </summary>
 	    private float _sinElevation;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Enables or disables the light source.
 	    ///     If the light source is enabled, this object will interpret the
 	    ///     noise map as a bump map.
@@ -508,11 +494,7 @@ namespace LibNoise.Renderer
 			set => _lightColor = value;
 		}
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Calculates the destination color.
 	    /// </summary>
 	    /// <param name="sourceColor">The source color generated from the color gradient</param>
@@ -598,7 +580,5 @@ namespace LibNoise.Renderer
 
 			return intensity;
 		}
-
-		#endregion
 	}
 }

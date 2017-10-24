@@ -25,24 +25,12 @@
     /// </summary>
     public class Turbulence : TransformerModule, IModule3D
 	{
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default power for the Turbulence noise module
 	    /// </summary>
-	    public const float DEFAULT_POWER = 1.0f;
+	    public const float DefaultPower = 1.0f;
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			// Get the values from the three Perlin noise modules and
@@ -77,14 +65,10 @@
 			return ((IModule3D) _sourceModule).GetValue(xDistort, yDistort, zDistort);
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The power (scale) of the displacement.
 	    /// </summary>
-	    protected float _power = DEFAULT_POWER;
+	    protected float _power = DefaultPower;
 
 	    /// <summary>
 	    ///     The source input module
@@ -106,11 +90,7 @@
 	    /// </summary>
 	    protected IModule _zDistortModule;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the source module
 	    /// </summary>
 	    public IModule SourceModule
@@ -157,16 +137,12 @@
 			set => _power = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create a new noise module with default values
 	    /// </summary>
 	    public Turbulence()
 		{
-			_power = DEFAULT_POWER;
+			_power = DefaultPower;
 		}
 
 
@@ -199,7 +175,5 @@
 
 			_power = power;
 		}
-
-		#endregion
 	}
 }

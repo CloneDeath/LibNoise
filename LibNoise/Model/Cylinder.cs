@@ -15,9 +15,7 @@ namespace LibNoise.Model
     /// </summary>
     public class Cylinder : AbstractModel
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Returns the output value from the noise module given the
 	    ///     (angle, height) coordinates of the specified input value located
 	    ///     on the surface of the cylinder.
@@ -37,11 +35,7 @@ namespace LibNoise.Model
 			return ((IModule3D) PSourceModule).GetValue(x, y, z);
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor.
 	    /// </summary>
 	    public Cylinder()
@@ -56,7 +50,5 @@ namespace LibNoise.Model
 			: base(module)
 		{
 		}
-
-		#endregion
 	}
 }

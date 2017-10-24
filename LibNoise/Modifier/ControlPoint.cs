@@ -8,23 +8,17 @@ namespace LibNoise.Modifier
     /// </summary>
     public struct ControlPoint : IEquatable<ControlPoint>
 	{
-		#region fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The input value stored in the control point
 	    /// </summary>
-	    public float Input;
+	    public float Input { get; }
 
 	    /// <summary>
 	    ///     The output value stored in the control point
 	    /// </summary>
-	    public float Output;
+	    public float Output { get; }
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create a new ControlPoint with given values
 	    /// </summary>
 	    /// <param name="input">The input value stored in the control point</param>
@@ -35,15 +29,9 @@ namespace LibNoise.Modifier
 			Output = output;
 		}
 
-		#endregion
-
-		#region Interface implementation
-
 		public bool Equals(ControlPoint other)
 		{
 			return Input == other.Input;
 		}
-
-		#endregion
 	}
 }

@@ -30,9 +30,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public class NormalMapRenderer : AbstractImageRenderer
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public NormalMapRenderer()
@@ -41,11 +39,7 @@ namespace LibNoise.Renderer
 			_bumpHeight = 1.0f;
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Renders the noise map to the destination image.
 	    /// </summary>
 	    public override void Render()
@@ -118,11 +112,7 @@ namespace LibNoise.Renderer
 			}
 		}
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Calculates the normal vector at a given point on the noise map.
 	    ///     This method encodes the (x, y, z) components of the normal vector
 	    ///     into the (red, green, blue) channels of the returned color.  In
@@ -154,25 +144,16 @@ namespace LibNoise.Renderer
 			var vyc = (nc - nu) / d;
 			var vzc = 1.0f / d;
 
-			// Map the normal range from the (-1.0 .. +1.0) range to the (0 .. 255)
-			// range.
+			// Map the normal range from the (-1.0 .. +1.0) range to the (0 .. 255) range.
 			byte xc, yc, zc;
 
-			xc = (byte) (Libnoise.FastFloor((vxc + 1.0f) * 127.5f) & 0xff);
-			yc = (byte) (Libnoise.FastFloor((vyc + 1.0f) * 127.5f) & 0xff);
-			zc = (byte) (Libnoise.FastFloor((vzc + 1.0f) * 127.5f) & 0xff);
-
-			//
-			//zc = (byte)((int)((floor)((vzc + 1.0f) * 127.5f)) & 0xff); 
-
+			xc = (byte) ((int)Math.Floor((vxc + 1.0f) * 127.5f) & 0xff);
+			yc = (byte) ((int)Math.Floor((vyc + 1.0f) * 127.5f) & 0xff);
+			zc = (byte) ((int)Math.Floor((vzc + 1.0f) * 127.5f) & 0xff);
 			return new Color(xc, yc, zc, 255);
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     This object requires three points (the initial point and the right
 	    ///     and up neighbors) to calculate the normal vector at that point.
 	    ///     If wrapping is/ enabled, and the initial point is on the edge of
@@ -195,11 +176,7 @@ namespace LibNoise.Renderer
 	    /// </summary>
 	    protected float _bumpHeight;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Enables or disables noise-map wrapping.
 	    ///     This object requires five points (the initial point and its four
 	    ///     neighbors) to calculate light shading.  If wrapping is enabled,
@@ -224,7 +201,5 @@ namespace LibNoise.Renderer
 			get => _bumpHeight;
 			set => _bumpHeight = value;
 		}
-
-		#endregion
 	}
 }

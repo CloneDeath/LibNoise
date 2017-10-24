@@ -1,23 +1,4 @@
-﻿// This file is part of libnoise-dotnet.
-//
-// libnoise-dotnet is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-// 
-// libnoise-dotnet is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU Lesser General Public License for more details.
-// 
-// You should have received a copy of the GNU Lesser General Public License
-// along with libnoise-dotnet.  If not, see <http://www.gnu.org/licenses/>.
-// 
-// Simplex Noise in 2D, 3D and 4D. Based on the example code of this paper:
-// http://staffwww.itn.liu.se/~stegu/simplexnoise/simplexnoise.pdf
-// 
-// From Stefan Gustavson, Linkping University, Sweden (stegu at itn dot liu dot se)
-// From Karsten Schmidt (slight optimizations & restructuring)
+﻿using System;
 
 namespace LibNoise.Primitive
 {
@@ -32,9 +13,7 @@ namespace LibNoise.Primitive
     /// </summary>
     public class SimplexPerlin : ImprovedPerlin, IModule4D, IModule3D, IModule2D
 	{
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -48,8 +27,8 @@ namespace LibNoise.Primitive
 			// Skew the input space to determine which simplex cell we're in
 			var s = (x + y) * F2; // Hairy factor for 2D
 
-			var i = Libnoise.FastFloor(x + s);
-			var j = Libnoise.FastFloor(y + s);
+			var i = (int)Math.Floor(x + s);
+			var j = (int)Math.Floor(y + s);
 
 			var t = (i + j) * G2;
 
@@ -121,17 +100,7 @@ namespace LibNoise.Primitive
 			return 70.0f * (n0 + n1 + n2);
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public new float GetValue(float x, float y, float z)
 		{
 			float n0 = 0, n1 = 0, n2 = 0, n3 = 0;
@@ -141,9 +110,9 @@ namespace LibNoise.Primitive
 			var s = (x + y + z) * F3;
 
 			// for 3D
-			var i = Libnoise.FastFloor(x + s);
-			var j = Libnoise.FastFloor(y + s);
-			var k = Libnoise.FastFloor(z + s);
+			var i = (int)Math.Floor(x + s);
+			var j = (int)Math.Floor(y + s);
+			var k = (int)Math.Floor(z + s);
 
 			var t = (i + j + k) * G3;
 
@@ -292,11 +261,7 @@ namespace LibNoise.Primitive
 			return 32.0f * (n0 + n1 + n2 + n3);
 		}
 
-		#endregion
-
-		#region IModule4D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -314,10 +279,10 @@ namespace LibNoise.Primitive
 			// Skew the (x,y,z,w) space to determine which cell of 24 simplices
 			var s = (x + y + z + w) * F4; // Factor for 4D skewing
 
-			var i = Libnoise.FastFloor(x + s);
-			var j = Libnoise.FastFloor(y + s);
-			var k = Libnoise.FastFloor(z + s);
-			var l = Libnoise.FastFloor(w + s);
+			var i = (int)Math.Floor(x + s);
+			var j = (int)Math.Floor(y + s);
+			var k = (int)Math.Floor(z + s);
+			var l = (int)Math.Floor(w + s);
 
 			var t = (i + j + k + l) * G4; // Factor for 4D unskewing
 
@@ -466,9 +431,7 @@ namespace LibNoise.Primitive
 			return 27.0f * (n0 + n1 + n2 + n3 + n4);
 		}
 
-		#endregion
-
-	    /// <summary>
+		/// <summary>
 	    ///     Computes dot product in 4D.
 	    /// </summary>
 	    /// <param name="g">4-vector (grid offset).</param>
@@ -506,8 +469,6 @@ namespace LibNoise.Primitive
 		{
 			return g[0] * x + g[1] * y;
 		}
-
-		#region Fields
 
 		/// Skewing and unskewing factors for 2D, 3D and 4D, 
 		/// some of them pre-multiplied.
@@ -577,11 +538,7 @@ namespace LibNoise.Primitive
 			new[] {3, 1, 0, 2}, new[] {0, 0, 0, 0}, new[] {3, 2, 0, 1}, new[] {3, 2, 1, 0}
 		};
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor
 	    /// </summary>
 	    public SimplexPerlin()
@@ -598,7 +555,5 @@ namespace LibNoise.Primitive
 			: base(seed, quality)
 		{
 		}
-
-		#endregion
 	}
 }

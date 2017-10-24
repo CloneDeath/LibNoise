@@ -24,18 +24,10 @@ namespace LibNoise.Modifier
     /// </summary>
     public class Select : SelectorModule, IModule3D
 	{
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
-			var controlValue = ((IModule3D) _controlModule).GetValue(x, y, z);
+			var controlValue = ((IModule3D) ControlModule).GetValue(x, y, z);
 			float alpha;
 
 			if (_edgeFalloff > 0.0)
@@ -98,11 +90,7 @@ namespace LibNoise.Modifier
 			return ((IModule3D) _leftModule).GetValue(x, y, z);
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    /// <param name="lower"></param>
 	    /// <param name="upper"></param>
@@ -116,34 +104,22 @@ namespace LibNoise.Modifier
 			EdgeFalloff = _edgeFalloff;
 		}
 
-		#endregion
-
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default edge-falloff value for the Select noise module.
 	    /// </summary>
-	    public const float DEFAULT_FALL_OFF = -1.0f;
+	    public const float DefaultFallOff = -1.0f;
 
 	    /// <summary>
 	    ///     Default lower bound of the selection range for the
 	    ///     Select noise module.
 	    /// </summary>
-	    public const float DEFAULT_LOWER_BOUND = -1.0f;
+	    public const float DefaultLowerBound = -1.0f;
 
 	    /// <summary>
 	    ///     Default upper bound of the selection range for the
 	    ///     Select noise module.
 	    /// </summary>
-	    public const float DEFAULT_UPPER_BOUND = 1.0f;
-
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
-	    /// </summary>
-	    protected IModule _controlModule;
+	    public const float DefaultUpperBound = 1.0f;
 
 	    /// <summary>
 	    ///     The falloff value is the width of the edge transition at either
@@ -168,7 +144,7 @@ namespace LibNoise.Modifier
 	    ///     if the output value from the control module is greater than 0.9
 	    ///     ( = 0.8 + 0.1).
 	    /// </summary>
-	    protected float _edgeFalloff = DEFAULT_FALL_OFF;
+	    protected float _edgeFalloff = DefaultFallOff;
 
 	    /// <summary>
 	    ///     The left input module
@@ -178,7 +154,7 @@ namespace LibNoise.Modifier
 	    /// <summary>
 	    ///     Lower bound of the selection range.
 	    /// </summary>
-	    protected float _lowerBound = DEFAULT_LOWER_BOUND;
+	    protected float _lowerBound = DefaultLowerBound;
 
 	    /// <summary>
 	    ///     The right input module
@@ -188,13 +164,9 @@ namespace LibNoise.Modifier
 	    /// <summary>
 	    ///     Upper bound of the selection range.
 	    /// </summary>
-	    protected float _upperBound = DEFAULT_UPPER_BOUND;
+	    protected float _upperBound = DefaultUpperBound;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     gets the lower bound
 	    /// </summary>
 	    public float LowerBound => _lowerBound;
@@ -239,15 +211,7 @@ namespace LibNoise.Modifier
 	    /// <summary>
 	    ///     Gets or sets the control module
 	    /// </summary>
-	    public IModule ControlModule
-		{
-			get => _controlModule;
-			set => _controlModule = value;
-		}
-
-		#endregion
-
-		#region Ctor/Dtor
+	    public IModule ControlModule { get; set; }
 
 		public Select()
 		{
@@ -257,14 +221,12 @@ namespace LibNoise.Modifier
 		public Select(IModule controlModule, IModule rightModule, IModule leftModule, float lower, float upper,
 			float edge)
 		{
-			_controlModule = controlModule;
+			ControlModule = controlModule;
 			_leftModule = leftModule;
 			_rightModule = rightModule;
 
 			SetBounds(lower, upper);
 			EdgeFalloff = edge;
 		}
-
-		#endregion
 	}
 }

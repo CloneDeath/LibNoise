@@ -20,9 +20,7 @@ namespace LibNoise.Builder
     /// </summary>
     public class NoiseMapBuilderSphere : NoiseMapBuilder
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public NoiseMapBuilderSphere()
@@ -30,11 +28,7 @@ namespace LibNoise.Builder
 			SetBounds(-90f, 90f, -180f, 180f); // degrees
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     Eastern boundary of the spherical noise map, in degrees.
 	    /// </summary>
 	    private float _eastLonBound;
@@ -54,11 +48,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    private float _westLonBound;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets the eastern boundary of the spherical noise map, in degrees.
 	    /// </summary>
 	    public float EastLonBound => _eastLonBound;
@@ -78,11 +68,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    public float WestLonBound => _westLonBound;
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Sets the coordinate boundaries of the noise map.
 	    ///     @pre The southern boundary is less than the northern boundary.
 	    ///     @pre The western boundary is less than the eastern boundary.
@@ -148,32 +134,31 @@ namespace LibNoise.Builder
 			var xDelta = lonExtent / PWidth;
 			var yDelta = latExtent / PHeight;
 
-			var curLon = _westLonBound;
 			var curLat = _southLatBound;
 
 			// Fill every point in the noise map with the output values from the model.
 			for (var y = 0; y < PHeight; y++)
 			{
-				curLon = _westLonBound;
+				var curLon = _westLonBound;
 
 				for (var x = 0; x < PWidth; x++)
 				{
 					float finalValue;
 					var level = FilterLevel.Source;
 
-					if (PFilter != null)
-						level = PFilter.IsFiltered(x, y);
+					if (Filter != null)
+						level = Filter.IsFiltered(x, y);
 
-					if (level == FilterLevel.Constant)
+					if (level == FilterLevel.Constant && Filter != null)
 					{
-						finalValue = PFilter.ConstantValue;
+						finalValue = Filter.ConstantValue;
 					}
 					else
 					{
 						finalValue = model.GetValue(curLat, curLon);
 
-						if (level == FilterLevel.Filter)
-							finalValue = PFilter.FilterValue(x, y, finalValue);
+						if (level == FilterLevel.Filter && Filter != null)
+							finalValue = Filter.FilterValue(x, y, finalValue);
 					}
 
 					PNoiseMap.SetValue(x, y, finalValue);
@@ -187,7 +172,5 @@ namespace LibNoise.Builder
 					PCallBack(y);
 			}
 		}
-
-		#endregion
 	}
 }

@@ -12,9 +12,7 @@
     /// </summary>
     public abstract class AbstractRenderer
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Renders the destination image using the contents of the source
 	    ///     noise map.
 	    ///     @pre NoiseMap has been defined.
@@ -24,11 +22,7 @@
 	    /// </summary>
 	    public abstract void Render();
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The callback function that Render() calls each time it fills a
 	    ///     row of the image.
 	    /// </summary>
@@ -39,11 +33,7 @@
 	    /// </summary>
 	    protected IMap2D<float> _noiseMap;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the source noise map
 	    /// </summary>
 	    public IMap2D<float> NoiseMap
@@ -60,7 +50,5 @@
 			get => _callBack;
 			set => _callBack = value;
 		}
-
-		#endregion
 	}
 }

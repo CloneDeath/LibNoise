@@ -14,9 +14,7 @@
     /// </summary>
     public class Line : AbstractModel
 	{
-		#region Public Properties
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets a value indicating whether the output value is to be attenuated
 	    ///     (moved toward 0.0) as the ends of the line segment are approached.
 	    /// </summary>
@@ -27,16 +25,12 @@
 			set => attenuate = value;
 		}
 
-		#endregion
-
-	    /// <summary>
+		/// <summary>
 	    ///     Internal struct that represent a 3D position
 	    /// </summary>
 	    protected struct Position
 		{
-			#region Fields
-
-		    /// <summary>
+			/// <summary>
 		    ///     x coordinate of a position.
 		    /// </summary>
 		    public float x;
@@ -51,11 +45,7 @@
 		    /// </summary>
 		    public float z;
 
-			#endregion
-
-			#region Constructors and Destructors
-
-		    /// <summary>Initializes a new instance of the <see cref="Position" /> struct.</summary>
+			/// <summary>Initializes a new instance of the <see cref="Position" /> struct.</summary>
 		    /// <param name="x">The x.</param>
 		    /// <param name="y">The y.</param>
 		    /// <param name="z">The z.</param>
@@ -65,13 +55,9 @@
 				this.y = y;
 				this.z = z;
 			}
-
-			#endregion
 		}
 
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     A flag indicating that the output value is to be attenuated
 	    ///     (moved toward 0.0) as the ends of the line segment are approached.
 	    /// </summary>
@@ -87,11 +73,7 @@
 	    /// </summary>
 	    private Position startPosition = new Position(0, 0, 0);
 
-		#endregion
-
-		#region Constructors and Destructors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Initializes a new instance of the <see cref="Line" /> class.
 	    ///     Default constructor
 	    /// </summary>
@@ -106,11 +88,7 @@
 		{
 		}
 
-		#endregion
-
-		#region Public Methods and Operators
-
-	    /// <summary>
+		/// <summary>
 	    ///     Returns the output value from the noise module given the
 	    ///     one-dimensional coordinate of the specified input value located
 	    ///     on the line segment. This value may be attenuated (moved toward
@@ -162,7 +140,5 @@
 			startPosition.y = y;
 			startPosition.z = z;
 		}
-
-		#endregion
 	}
 }

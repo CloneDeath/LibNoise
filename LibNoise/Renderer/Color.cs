@@ -12,9 +12,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public class Color : IEquatable<Color>, IColor
 	{
-		#region Interface implementation
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    /// <param name="other"></param>
 	    /// <returns></returns>
@@ -26,22 +24,14 @@ namespace LibNoise.Renderer
 			       && _alpha == other.Alpha;
 		}
 
-		#endregion
-
-		#region fields
-
-		#region Delegates
-
-	    /// <summary>
+		/// <summary>
 	    ///     Compute a grayscale value from the source color.
 	    /// </summary>
 	    /// <param name="color">The source color.</param>
 	    /// <returns>The computed channel value.</returns>
 	    public delegate byte GrayscaleStrategy(IColor color);
 
-		#endregion
-
-	    /// <summary>
+		/// <summary>
 	    ///     Static Random generator.
 	    /// </summary>
 	    private static readonly Random Rnd = new Random(666);
@@ -71,11 +61,7 @@ namespace LibNoise.Renderer
 	    /// </summary>
 	    private byte _red;
 
-		#endregion
-
-		#region Properties
-
-	    /// <summary>
+		/// <summary>
 	    ///     The red channel.
 	    /// </summary>
 	    public byte Red
@@ -111,11 +97,7 @@ namespace LibNoise.Renderer
 			set => _alpha = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor, a solid black color (0, 0, 0, 255).
 	    /// </summary>
 	    public Color()
@@ -154,11 +136,7 @@ namespace LibNoise.Renderer
 			_alpha = 255;
 		}
 
-		#endregion
-
-		#region Utilities
-
-	    /// <summary>
+		/// <summary>
 	    ///     Performs linear interpolation between two colors only with rgb channels.
 	    /// </summary>
 	    /// <param name="color0">The first color.</param>
@@ -271,11 +249,7 @@ namespace LibNoise.Renderer
 			return (byte) (0.21f * color.Red + 0.71f * color.Green + 0.07f * color.Blue);
 		}
 
-		#endregion
-
-		#region Overloading
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    /// <returns></returns>
 	    public override string ToString()
@@ -379,7 +353,5 @@ namespace LibNoise.Renderer
 		{
 			return a < b || a == b;
 		}
-
-		#endregion
 	}
 }

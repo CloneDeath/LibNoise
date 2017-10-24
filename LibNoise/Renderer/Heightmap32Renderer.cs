@@ -5,18 +5,12 @@
     /// </summary>
     public class Heightmap32Renderer : AbstractHeightmapRenderer
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The destination heightmap
 	    /// </summary>
 	    protected Heightmap32 _heightmap;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the destination heightmap
 	    /// </summary>
 	    public Heightmap32 Heightmap
@@ -25,15 +19,7 @@
 			set => _heightmap = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
-
-		#region internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Sets the new size for the target heightmap.
 	    /// </summary>
 	    /// <param name="width">width The new width for the heightmap</param>
@@ -72,7 +58,5 @@
 
 			_heightmap.SetValue(x, y, elevation);
 		}
-
-		#endregion
 	}
 }

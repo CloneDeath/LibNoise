@@ -7,9 +7,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public class Heightmap32 : NoiseMap
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor
 	    /// </summary>
 	    public Heightmap32()
@@ -37,7 +35,5 @@ namespace LibNoise.Renderer
 			: base(copy)
 		{
 		}
-
-		#endregion
 	}
 }

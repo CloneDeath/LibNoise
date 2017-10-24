@@ -30,9 +30,7 @@ namespace LibNoise.Utils
     /// </summary>
     public abstract class DataMap<T> where T : IEquatable<T>
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The noise map buffer.
 	    /// </summary>
 	    private T[] _data;
@@ -67,11 +65,7 @@ namespace LibNoise.Utils
 	    /// </summary>
 	    private int _width;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets the width of the map.
 	    /// </summary>
 	    public int Width => _width;
@@ -147,11 +141,7 @@ namespace LibNoise.Utils
 			set => _data = value;
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create an empty map.
 	    /// </summary>
 	    protected DataMap()
@@ -187,11 +177,7 @@ namespace LibNoise.Utils
 			CopyFrom(copy);
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Returns a copy of a slab.
 	    ///     This method returns slab filled with the borderValue
 	    ///     if the coordinates exist outside the map.
@@ -372,11 +358,7 @@ namespace LibNoise.Utils
 				Array.Clear(_data, 0, CellsCount);
 		}
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Return the memory size of the type of data.
 	    ///     Children must implement this method to calculate the memory usage.
 	    /// </summary>
@@ -425,7 +407,5 @@ namespace LibNoise.Utils
 
 			AllocateBuffer();
 		}
-
-		#endregion
 	}
 }

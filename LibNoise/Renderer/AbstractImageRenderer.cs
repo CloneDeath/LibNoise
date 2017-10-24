@@ -5,18 +5,12 @@
     /// </summary>
     public abstract class AbstractImageRenderer : AbstractRenderer
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The destination image
 	    /// </summary>
 	    protected IMap2D<IColor> _image;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the destination image
 	    /// </summary>
 	    public IMap2D<IColor> Image
@@ -24,7 +18,5 @@
 			get => _image;
 			set => _image = value;
 		}
-
-		#endregion
 	}
 }

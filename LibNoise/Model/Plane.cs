@@ -13,9 +13,7 @@
     /// </summary>
     public class Plane : AbstractModel
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Returns the output value from the noise module given the
 	    ///     (x, z) coordinates of the specified input value located
 	    ///     on the surface of the plane.
@@ -28,11 +26,7 @@
 			return ((IModule3D) PSourceModule).GetValue(x, 0.0f, z);
 		}
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public Plane()
@@ -48,11 +42,5 @@
 			: base(module)
 		{
 		}
-
-		#endregion
-
-		#region Internal
-
-		#endregion
 	}
 }

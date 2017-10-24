@@ -96,22 +96,12 @@ namespace LibNoise.Renderer
     /// </summary>
     public class GradientColor
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The gradient points list
 	    /// </summary>
 	    private readonly List<GradientPoint> _gradientPoints = new List<GradientPoint>(10);
 
-		#endregion
-
-		#region Accessors
-
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create an empty GradientColor
 	    /// </summary>
 	    public GradientColor()
@@ -139,11 +129,7 @@ namespace LibNoise.Renderer
 			AddGradientPoint(1.0f, end);
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Adds a gradient point to this gradient object.
 	    ///     No two gradient points have the same position.
 	    ///     @throw System.ArgumentException if two control points have the same position.
@@ -248,7 +234,5 @@ namespace LibNoise.Renderer
 		{
 			return _gradientPoints.AsReadOnly();
 		}
-
-		#endregion
 	}
 }

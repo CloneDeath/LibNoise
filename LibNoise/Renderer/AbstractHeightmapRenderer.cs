@@ -7,9 +7,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public abstract class AbstractHeightmapRenderer : AbstractRenderer
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     template constructor
 	    /// </summary>
 	    public AbstractHeightmapRenderer()
@@ -17,11 +15,7 @@ namespace LibNoise.Renderer
 			_WrapEnabled = false;
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     If wrapping is/ enabled, and the initial point is on the edge of
 	    ///     the noise map, the appropriate neighbors that lie outside of the
 	    ///     noise map will "wrap" to the opposite side(s) of the noise map.
@@ -39,11 +33,7 @@ namespace LibNoise.Renderer
 	    /// </summary>
 	    protected float _upperHeightBound;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the lower height boundary of the heightmap
 	    /// </summary>
 	    public float LowerHeightBound => _lowerHeightBound;
@@ -62,11 +52,7 @@ namespace LibNoise.Renderer
 			set => _WrapEnabled = value;
 		}
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Sets the boundaries of the heightmap.
 	    ///     @throw ArgumentException if the lower boundary equals the upper boundary
 	    ///     or if the lower boundary is greater than upper boundary
@@ -169,11 +155,7 @@ namespace LibNoise.Renderer
 			}
 		}
 
-		#endregion
-
-		#region internal
-
-	    /// <summary>
+		/// <summary>
 	    /// </summary>
 	    /// <returns></returns>
 	    protected abstract bool CheckHeightmap();
@@ -192,7 +174,5 @@ namespace LibNoise.Renderer
 	    /// <param name="source"></param>
 	    /// <param name="boundDiff"></param>
 	    protected abstract void RenderHeight(int x, int y, float source, float boundDiff);
-
-		#endregion
 	}
 }

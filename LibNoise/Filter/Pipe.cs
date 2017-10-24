@@ -6,25 +6,19 @@
     /// </summary>
     public class Pipe : FilterModule, IModule4D, IModule3D, IModule2D, IModule1D
 	{
-		#region IModule1D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
 	    /// <returns>The resulting output value.</returns>
 	    public float GetValue(float x)
 		{
-			x *= _frequency;
+			x *= Frequency;
 
-			return _source1D.GetValue(x);
+			return Primitive1D.GetValue(x);
 		}
 
-		#endregion
-
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -32,37 +26,23 @@
 	    /// <returns>The resulting output value.</returns>
 	    public float GetValue(float x, float y)
 		{
-			x *= _frequency;
-			y *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
 
-			return _source2D.GetValue(x, y);
+			return Primitive2D.GetValue(x, y);
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
 
-			return _source3D.GetValue(x, y, z);
+			return Primitive3D.GetValue(x, y, z);
 		}
 
-		#endregion
-
-		#region IModule4D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -72,18 +52,12 @@
 	    /// <returns>The resulting output value.</returns>
 	    public float GetValue(float x, float y, float z, float t)
 		{
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
-			t *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
+			t *= Frequency;
 
-			return _source4D.GetValue(x, y, z, t);
+			return Primitive4D.GetValue(x, y, z, t);
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }

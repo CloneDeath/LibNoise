@@ -9,9 +9,7 @@ namespace LibNoise.Renderer
     /// </summary>
     public class Image : DataMap<Color>, IMap2D<Color>
 	{
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Find the lowest and highest value in the map
 	    /// </summary>
 	    /// <param name="min">the lowest value</param>
@@ -33,11 +31,7 @@ namespace LibNoise.Renderer
 			}
 		}
 
-		#endregion
-
-		#region constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     The maximum width of a raster.
 	    /// </summary>
 	    public const int RasterMaxWidth = 32767;
@@ -47,11 +41,7 @@ namespace LibNoise.Renderer
 	    /// </summary>
 	    public const int RasterMaxHeight = 32767;
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Create an empty Image
 	    /// </summary>
 	    public Image()
@@ -102,11 +92,7 @@ namespace LibNoise.Renderer
 			CopyFrom(copy);
 		}
 
-		#endregion
-
-		#region Internal
-
-	    /// <summary>
+		/// <summary>
 	    ///     Return the memory size of a Color
 	    /// </summary>
 	    /// <returns>The memory size of a Color</returns>
@@ -132,7 +118,5 @@ namespace LibNoise.Renderer
 		{
 			return Colors.Black;
 		}
-
-		#endregion
 	}
 }

@@ -4,9 +4,7 @@
     /// </summary>
     public interface IMap2D<T>
 	{
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets the width of the map
 	    /// </summary>
 	    int Width { get; }
@@ -21,11 +19,7 @@
 	    /// </summary>
 	    T BorderValue { get; set; }
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Returns a value from the specified position in the noise map.
 	    ///     This method returns the border value if the coordinates exist
 	    ///     outside of the noise map.
@@ -81,7 +75,5 @@
 	    /// <param name="min">the lowest value</param>
 	    /// <param name="max">the highest value</param>
 	    void MinMax(out T min, out T max);
-
-		#endregion
 	}
 }

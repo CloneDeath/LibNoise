@@ -23,9 +23,7 @@ namespace LibNoise.Builder
     /// </summary>
     public class NoiseMapBuilderCylinder : NoiseMapBuilder
 	{
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default constructor
 	    /// </summary>
 	    public NoiseMapBuilderCylinder()
@@ -33,11 +31,7 @@ namespace LibNoise.Builder
 			SetBounds(-180.0f, 180.0f, -10.0f, 10.0f);
 		}
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     Lower Angle boundary of the planar noise map, in units.
 	    /// </summary>
 	    private float _lowerAngleBound;
@@ -57,11 +51,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    private float _upperHeightBound;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets the lower Height boundary of the planar noise map, in units.
 	    /// </summary>
 	    public float LowerHeightBound => _lowerHeightBound;
@@ -81,11 +71,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    public float UpperHeightBound => _upperHeightBound;
 
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Sets the boundaries of the planar noise map.
 	    ///     @pre The lower Angle boundary is less than the upper Angle boundary.
 	    ///     @pre The lower Height boundary is less than the upper Height boundary.
@@ -153,32 +139,31 @@ namespace LibNoise.Builder
 			var xDelta = angleExtent / PWidth;
 			var yDelta = heightExtent / PHeight;
 
-			var curAngle = _lowerAngleBound;
 			var curHeight = _lowerHeightBound;
 
 			// Fill every point in the noise map with the output values from the model.
 			for (var y = 0; y < PHeight; y++)
 			{
-				curAngle = _lowerAngleBound;
+				var curAngle = _lowerAngleBound;
 
 				for (var x = 0; x < PWidth; x++)
 				{
 					float finalValue;
 					var level = FilterLevel.Source;
 
-					if (PFilter != null)
-						level = PFilter.IsFiltered(x, y);
+					if (Filter != null)
+						level = Filter.IsFiltered(x, y);
 
-					if (level == FilterLevel.Constant && PFilter != null)
+					if (level == FilterLevel.Constant && Filter != null)
 					{
-						finalValue = PFilter.ConstantValue;
+						finalValue = Filter.ConstantValue;
 					}
 					else
 					{
 						finalValue = model.GetValue(curAngle, curHeight);
 
-						if (level == FilterLevel.Filter && PFilter != null)
-							finalValue = PFilter.FilterValue(x, y, finalValue);
+						if (level == FilterLevel.Filter && Filter != null)
+							finalValue = Filter.FilterValue(x, y, finalValue);
 					}
 
 					PNoiseMap.SetValue(x, y, finalValue);
@@ -192,7 +177,5 @@ namespace LibNoise.Builder
 					PCallBack(y);
 			}
 		}
-
-		#endregion
 	}
 }

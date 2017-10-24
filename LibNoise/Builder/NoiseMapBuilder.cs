@@ -41,18 +41,11 @@ namespace LibNoise.Builder
     /// </summary>
     public abstract class NoiseMapBuilder
 	{
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     The callback function that Build() calls each time it fills a
 	    ///     row of the noise map with coherent-noise values.
 	    /// </summary>
 	    protected NoiseMapBuilderCallback PCallBack;
-
-	    /// <summary>
-	    ///     Filter.
-	    /// </summary>
-	    protected IBuilderFilter PFilter;
 
 	    /// <summary>
 	    ///     The height of the map.
@@ -74,11 +67,7 @@ namespace LibNoise.Builder
 	    /// </summary>
 	    protected int PWidth;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the source module.
 	    /// </summary>
 	    public IModule SourceModule
@@ -118,21 +107,9 @@ namespace LibNoise.Builder
 	    /// <summary>
 	    ///     Filter.
 	    /// </summary>
-	    public IBuilderFilter Filter
-		{
-			get => PFilter;
-			set => PFilter = value;
-		}
+	    public IBuilderFilter Filter { get; set; }
 
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
-
-		#region Interaction
-
-	    /// <summary>
+		/// <summary>
 	    ///     Builds the noise map.
 	    ///     @pre SetBounds() was previously called.
 	    ///     @pre NoiseMap was previously defined.
@@ -167,7 +144,5 @@ namespace LibNoise.Builder
 			PHeight = height;
 			PWidth = width;
 		}
-
-		#endregion
 	}
 }

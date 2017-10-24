@@ -19,8 +19,6 @@ namespace LibNoise.Primitive
     /// </summary>
     public sealed class BevinsValue : PrimitiveModule, IModule3D, IModule2D, IModule1D
 	{
-		#region Constants
-
 		// These constants control certain parameters that all coherent-noise
 		// functions require.
 #if LIBNOISE_VERSION_2
@@ -47,11 +45,7 @@ namespace LibNoise.Primitive
 
 #endif
 
-		#endregion
-
-		#region Ctor/Dtor
-
-	    /// <summary>
+		/// <summary>
 	    ///     0-args constructor.
 	    /// </summary>
 	    public BevinsValue()
@@ -70,27 +64,13 @@ namespace LibNoise.Primitive
 			Quality = quality;
 		}
 
-		#endregion
-
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			return ValueCoherentNoise3D(x, y, z, Seed, Quality);
 		}
 
-		#endregion
-
-		#region ValueCoherentNoise3D
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates a value-coherent-noise value from the coordinates of a
 	    ///     three-dimensional input value.
 	    ///     The return value ranges from -1.0 to +1.0.
@@ -211,11 +191,7 @@ namespace LibNoise.Primitive
 			return (int) (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
 		}
 
-		#endregion
-
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -226,11 +202,7 @@ namespace LibNoise.Primitive
 			return ValueCoherentNoise2D(x, y, Seed, Quality);
 		}
 
-		#endregion
-
-		#region ValueCoherentNoise2D
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates a value-coherent-noise value from the coordinates of a
 	    ///     two-dimensional input value.
 	    ///     The return value ranges from -1.0 to +1.0.
@@ -346,11 +318,7 @@ namespace LibNoise.Primitive
 			return (int) (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
 		}
 
-		#endregion
-
-		#region IModule1D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -360,11 +328,7 @@ namespace LibNoise.Primitive
 			return ValueCoherentNoise1D(x, Seed, Quality);
 		}
 
-		#endregion
-
-		#region ValueNoise1D
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates a value-coherent-noise value from the coordinates of a
 	    ///     one-dimensional input value.
 	    ///     The return value ranges from -1.0 to +1.0.
@@ -447,7 +411,5 @@ namespace LibNoise.Primitive
 			n = (n >> 13) ^ n;
 			return (int) (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
 		}
-
-		#endregion
 	}
 }

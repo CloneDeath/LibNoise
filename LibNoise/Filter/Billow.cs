@@ -16,9 +16,7 @@ namespace LibNoise.Filter
     /// </summary>
     public class Billow : FilterModule, IModule3D, IModule2D
 	{
-		#region IModule2D Members
-
-	    /// <summary>
+		/// <summary>
 	    ///     Generates an output value given the coordinates of the specified input value.
 	    /// </summary>
 	    /// <param name="x">The input coordinate on the x-axis.</param>
@@ -30,18 +28,18 @@ namespace LibNoise.Filter
 			float value;
 			int curOctave;
 
-			x *= _frequency;
-			y *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
 
 			// Initialize value, fBM starts with 0
 			value = 0;
 
 			// Inner loop of spectral construction, where the fractal is built
 
-			for (curOctave = 0; curOctave < _octaveCount; curOctave++)
+			for (curOctave = 0; curOctave < OctaveCount; curOctave++)
 			{
 				// Get the coherent-noise value.
-				signal = _source2D.GetValue(x, y) * _spectralWeights[curOctave];
+				signal = Primitive2D.GetValue(x, y) * SpectralWeights[curOctave];
 
 				if (signal < 0.0f)
 					signal = -signal;
@@ -50,45 +48,36 @@ namespace LibNoise.Filter
 				value += signal * PScale + PBias;
 
 				// Go to the next octave.
-				x *= _lacunarity;
-				y *= _lacunarity;
+				x *= Lacunarity;
+				y *= Lacunarity;
 			}
 
-			//take care of remainder in _octaveCount
-			var remainder = _octaveCount - (int) _octaveCount;
+			//take care of remainder in OctaveCount
+			var remainder = OctaveCount - (int) OctaveCount;
 			if (remainder > 0)
-				value += PScale * remainder * _source2D.GetValue(x, y) * _spectralWeights[curOctave] + PBias;
+				value += PScale * remainder * Primitive2D.GetValue(x, y) * SpectralWeights[curOctave] + PBias;
 
 			return value;
 		}
 
-		#endregion
 
-		#region IModule3D Members
-
-	    /// <summary>
-	    ///     Generates an output value given the coordinates of the specified input value.
-	    /// </summary>
-	    /// <param name="x">The input coordinate on the x-axis.</param>
-	    /// <param name="y">The input coordinate on the y-axis.</param>
-	    /// <param name="z">The input coordinate on the z-axis.</param>
-	    /// <returns>The resulting output value.</returns>
+		
 	    public float GetValue(float x, float y, float z)
 		{
 			int curOctave;
 
-			x *= _frequency;
-			y *= _frequency;
-			z *= _frequency;
+			x *= Frequency;
+			y *= Frequency;
+			z *= Frequency;
 
 			// Initialize value, fBM starts with 0
 			float value = 0;
 
 			// Inner loop of spectral construction, where the fractal is built
-			for (curOctave = 0; curOctave < _octaveCount; curOctave++)
+			for (curOctave = 0; curOctave < OctaveCount; curOctave++)
 			{
 				// Get the coherent-noise value.
-				var signal = _source3D.GetValue(x, y, z) * _spectralWeights[curOctave];
+				var signal = Primitive3D.GetValue(x, y, z) * SpectralWeights[curOctave];
 
 				if (signal < 0.0f)
 					signal = -signal;
@@ -97,24 +86,20 @@ namespace LibNoise.Filter
 				value += signal * PScale + PBias;
 
 				// Go to the next octave.
-				x *= _lacunarity;
-				y *= _lacunarity;
-				z *= _lacunarity;
+				x *= Lacunarity;
+				y *= Lacunarity;
+				z *= Lacunarity;
 			}
 
-			//take care of remainder in _octaveCount
-			var remainder = _octaveCount - (int) _octaveCount;
+			//take care of remainder in OctaveCount
+			var remainder = OctaveCount - (int) OctaveCount;
 			if (remainder > 0.0f)
-				value += PScale * remainder * _source3D.GetValue(x, y, z) * _spectralWeights[curOctave] + PBias;
+				value += PScale * remainder * Primitive3D.GetValue(x, y, z) * SpectralWeights[curOctave] + PBias;
 
 			return value;
 		}
 
-		#endregion
-
-		#region Constants
-
-	    /// <summary>
+		/// <summary>
 	    ///     Default scale
 	    ///     noise module.
 	    /// </summary>
@@ -126,11 +111,7 @@ namespace LibNoise.Filter
 	    /// </summary>
 	    public const float DefaultBias = 0.0f;
 
-		#endregion
-
-		#region Fields
-
-	    /// <summary>
+		/// <summary>
 	    ///     the bias to apply to the scaled output value from the source module.
 	    /// </summary>
 	    protected float PBias = DefaultBias;
@@ -140,11 +121,7 @@ namespace LibNoise.Filter
 	    /// </summary>
 	    protected float PScale = DefaultScale;
 
-		#endregion
-
-		#region Accessors
-
-	    /// <summary>
+		/// <summary>
 	    ///     Gets or sets the scale value.
 	    /// </summary>
 	    public float Scale
@@ -161,11 +138,5 @@ namespace LibNoise.Filter
 			get => PBias;
 			set => PBias = value;
 		}
-
-		#endregion
-
-		#region Ctor/Dtor
-
-		#endregion
 	}
 }
